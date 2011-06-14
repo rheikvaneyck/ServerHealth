@@ -1,0 +1,331 @@
+check RAID...
+*** Active Set
+name   : nvidia_eehcaejf
+size   : 976773120
+stride : 128
+type   : mirror
+status : ok
+subsets: 0
+devs   : 2
+spares : 0
+/dev/sdb: nvidia, "nvidia_eehcaejf", mirror, ok, 976773166 sectors, data@ 0
+/dev/sda: nvidia, "nvidia_eehcaejf", mirror, ok, 976773166 sectors, data@ 0
+
+
+check storage...
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/mapper/usclx0002-root
+                     469079536  56952492 388299180  13% /
+tmpfs                  1967608         0   1967608   0% /lib/init/rw
+varrun                 1967608      1268   1966340   1% /var/run
+varlock                1967608         0   1967608   0% /var/lock
+udev                   1967608       136   1967472   1% /dev
+tmpfs                  1967608         0   1967608   0% /dev/shm
+lrm                    1967608      2560   1965048   1% /lib/modules/2.6.28-19-server/volatile
+/dev/mapper/nvidia_eehcaejf5
+                        233335     99602    121285  46% /boot
+
+
+check S.M.A.R.T.T...
+smartctl version 5.38 [x86_64-unknown-linux-gnu] Copyright (C) 2002-8 Bruce Allen
+Home page is http://smartmontools.sourceforge.net/
+
+=== START OF INFORMATION SECTION ===
+Device Model:     WDC WD5000AADS-00L4B1
+Serial Number:    WD-WCAUK1180292
+Firmware Version: 05.04C05
+User Capacity:    500,107,862,016 bytes
+Device is:        Not in smartctl database [for details use: -P showall]
+ATA Version is:   8
+ATA Standard is:  Exact ATA specification draft version not indicated
+Local Time is:    Wed Jun  1 06:44:15 2011 CEST
+SMART support is: Available - device has SMART capability.
+SMART support is: Enabled
+
+=== START OF READ SMART DATA SECTION ===
+SMART overall-health self-assessment test result: PASSED
+
+General SMART Values:
+Offline data collection status:  (0x84)	Offline data collection activity
+					was suspended by an interrupting command from host.
+					Auto Offline Data Collection: Enabled.
+Self-test execution status:      (   0)	The previous self-test routine completed
+					without error or no self-test has ever 
+					been run.
+Total time to complete Offline 
+data collection: 		 (11400) seconds.
+Offline data collection
+capabilities: 			 (0x7b) SMART execute Offline immediate.
+					Auto Offline data collection on/off support.
+					Suspend Offline collection upon new
+					command.
+					Offline surface scan supported.
+					Self-test supported.
+					Conveyance Self-test supported.
+					Selective Self-test supported.
+SMART capabilities:            (0x0003)	Saves SMART data before entering
+					power-saving mode.
+					Supports SMART auto save timer.
+Error logging capability:        (0x01)	Error logging supported.
+					General Purpose Logging supported.
+Short self-test routine 
+recommended polling time: 	 (   2) minutes.
+Extended self-test routine
+recommended polling time: 	 ( 133) minutes.
+Conveyance self-test routine
+recommended polling time: 	 (   5) minutes.
+SCT capabilities: 	       (0x303f)	SCT Status supported.
+					SCT Feature Control supported.
+					SCT Data Table supported.
+
+SMART Attributes Data Structure revision number: 16
+Vendor Specific SMART Attributes with Thresholds:
+ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE
+  1 Raw_Read_Error_Rate     0x002f   200   200   051    Pre-fail  Always       -       0
+  3 Spin_Up_Time            0x0027   137   134   021    Pre-fail  Always       -       6150
+  4 Start_Stop_Count        0x0032   100   100   000    Old_age   Always       -       52
+  5 Reallocated_Sector_Ct   0x0033   200   200   140    Pre-fail  Always       -       0
+  7 Seek_Error_Rate         0x002e   200   200   000    Old_age   Always       -       0
+  9 Power_On_Hours          0x0032   088   088   000    Old_age   Always       -       9443
+ 10 Spin_Retry_Count        0x0032   100   253   000    Old_age   Always       -       0
+ 11 Calibration_Retry_Count 0x0032   100   253   000    Old_age   Always       -       0
+ 12 Power_Cycle_Count       0x0032   100   100   000    Old_age   Always       -       50
+192 Power-Off_Retract_Count 0x0032   200   200   000    Old_age   Always       -       4
+193 Load_Cycle_Count        0x0032   200   200   000    Old_age   Always       -       52
+194 Temperature_Celsius     0x0022   109   104   000    Old_age   Always       -       38
+196 Reallocated_Event_Count 0x0032   200   200   000    Old_age   Always       -       0
+197 Current_Pending_Sector  0x0032   200   200   000    Old_age   Always       -       0
+198 Offline_Uncorrectable   0x0030   200   200   000    Old_age   Offline      -       0
+199 UDMA_CRC_Error_Count    0x0032   200   200   000    Old_age   Always       -       0
+200 Multi_Zone_Error_Rate   0x0008   200   200   000    Old_age   Offline      -       0
+
+SMART Error Log Version: 1
+No Errors Logged
+
+SMART Self-test log structure revision number 1
+Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA_of_first_error
+# 1  Short offline       Completed without error       00%      9419         -
+# 2  Short offline       Completed without error       00%      9395         -
+# 3  Short offline       Completed without error       00%      9371         -
+# 4  Short offline       Completed without error       00%      9347         -
+# 5  Short offline       Completed without error       00%      9323         -
+# 6  Short offline       Completed without error       00%      9300         -
+# 7  Short offline       Completed without error       00%      9275         -
+# 8  Short offline       Completed without error       00%      9251         -
+# 9  Short offline       Completed without error       00%      9228         -
+#10  Short offline       Completed without error       00%      9204         -
+#11  Short offline       Completed without error       00%      9180         -
+#12  Short offline       Completed without error       00%      9155         -
+#13  Short offline       Completed without error       00%      9132         -
+#14  Short offline       Completed without error       00%      9108         -
+#15  Short offline       Completed without error       00%      9084         -
+#16  Short offline       Completed without error       00%      9060         -
+#17  Short offline       Completed without error       00%      9036         -
+#18  Short offline       Completed without error       00%      9012         -
+#19  Short offline       Completed without error       00%      8988         -
+#20  Short offline       Completed without error       00%      8964         -
+#21  Short offline       Completed without error       00%      8940         -
+
+SMART Selective self-test log data structure revision number 1
+ SPAN  MIN_LBA  MAX_LBA  CURRENT_TEST_STATUS
+    1        0        0  Not_testing
+    2        0        0  Not_testing
+    3        0        0  Not_testing
+    4        0        0  Not_testing
+    5        0        0  Not_testing
+Selective self-test flags (0x0):
+  After scanning selected spans, do NOT read-scan remainder of disk.
+If Selective self-test is pending on power-up, resume after 0 minute delay.
+
+smartctl version 5.38 [x86_64-unknown-linux-gnu] Copyright (C) 2002-8 Bruce Allen
+Home page is http://smartmontools.sourceforge.net/
+
+=== START OF INFORMATION SECTION ===
+Device Model:     WDC WD5000AADS-00L4B1
+Serial Number:    WD-WCAUK1174766
+Firmware Version: 05.04C05
+User Capacity:    500,107,862,016 bytes
+Device is:        Not in smartctl database [for details use: -P showall]
+ATA Version is:   8
+ATA Standard is:  Exact ATA specification draft version not indicated
+Local Time is:    Wed Jun  1 06:44:15 2011 CEST
+SMART support is: Available - device has SMART capability.
+SMART support is: Enabled
+
+=== START OF READ SMART DATA SECTION ===
+SMART overall-health self-assessment test result: PASSED
+
+General SMART Values:
+Offline data collection status:  (0x84)	Offline data collection activity
+					was suspended by an interrupting command from host.
+					Auto Offline Data Collection: Enabled.
+Self-test execution status:      (   0)	The previous self-test routine completed
+					without error or no self-test has ever 
+					been run.
+Total time to complete Offline 
+data collection: 		 (11400) seconds.
+Offline data collection
+capabilities: 			 (0x7b) SMART execute Offline immediate.
+					Auto Offline data collection on/off support.
+					Suspend Offline collection upon new
+					command.
+					Offline surface scan supported.
+					Self-test supported.
+					Conveyance Self-test supported.
+					Selective Self-test supported.
+SMART capabilities:            (0x0003)	Saves SMART data before entering
+					power-saving mode.
+					Supports SMART auto save timer.
+Error logging capability:        (0x01)	Error logging supported.
+					General Purpose Logging supported.
+Short self-test routine 
+recommended polling time: 	 (   2) minutes.
+Extended self-test routine
+recommended polling time: 	 ( 133) minutes.
+Conveyance self-test routine
+recommended polling time: 	 (   5) minutes.
+SCT capabilities: 	       (0x303f)	SCT Status supported.
+					SCT Feature Control supported.
+					SCT Data Table supported.
+
+SMART Attributes Data Structure revision number: 16
+Vendor Specific SMART Attributes with Thresholds:
+ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE
+  1 Raw_Read_Error_Rate     0x002f   200   200   051    Pre-fail  Always       -       0
+  3 Spin_Up_Time            0x0027   133   130   021    Pre-fail  Always       -       6325
+  4 Start_Stop_Count        0x0032   100   100   000    Old_age   Always       -       52
+  5 Reallocated_Sector_Ct   0x0033   200   200   140    Pre-fail  Always       -       0
+  7 Seek_Error_Rate         0x002e   200   200   000    Old_age   Always       -       0
+  9 Power_On_Hours          0x0032   083   083   000    Old_age   Always       -       12922
+ 10 Spin_Retry_Count        0x0032   100   253   000    Old_age   Always       -       0
+ 11 Calibration_Retry_Count 0x0032   100   253   000    Old_age   Always       -       0
+ 12 Power_Cycle_Count       0x0032   100   100   000    Old_age   Always       -       50
+192 Power-Off_Retract_Count 0x0032   200   200   000    Old_age   Always       -       4
+193 Load_Cycle_Count        0x0032   200   200   000    Old_age   Always       -       52
+194 Temperature_Celsius     0x0022   109   104   000    Old_age   Always       -       38
+196 Reallocated_Event_Count 0x0032   200   200   000    Old_age   Always       -       0
+197 Current_Pending_Sector  0x0032   200   200   000    Old_age   Always       -       0
+198 Offline_Uncorrectable   0x0030   200   200   000    Old_age   Offline      -       0
+199 UDMA_CRC_Error_Count    0x0032   200   200   000    Old_age   Always       -       0
+200 Multi_Zone_Error_Rate   0x0008   200   200   000    Old_age   Offline      -       0
+
+SMART Error Log Version: 1
+No Errors Logged
+
+SMART Self-test log structure revision number 1
+Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA_of_first_error
+# 1  Short offline       Completed without error       00%     12898         -
+# 2  Short offline       Completed without error       00%     12874         -
+# 3  Short offline       Completed without error       00%     12850         -
+# 4  Short offline       Completed without error       00%     12826         -
+# 5  Short offline       Completed without error       00%     12801         -
+# 6  Short offline       Completed without error       00%     12778         -
+# 7  Short offline       Completed without error       00%     12754         -
+# 8  Short offline       Completed without error       00%     12730         -
+# 9  Short offline       Completed without error       00%     12706         -
+#10  Short offline       Completed without error       00%     12682         -
+#11  Short offline       Completed without error       00%     12658         -
+#12  Short offline       Completed without error       00%     12634         -
+#13  Short offline       Completed without error       00%     12610         -
+#14  Short offline       Completed without error       00%     12586         -
+#15  Short offline       Completed without error       00%     12562         -
+#16  Short offline       Completed without error       00%     12538         -
+#17  Short offline       Completed without error       00%     12514         -
+#18  Short offline       Completed without error       00%     12490         -
+#19  Short offline       Completed without error       00%     12466         -
+#20  Short offline       Completed without error       00%     12442         -
+#21  Short offline       Completed without error       00%     12418         -
+
+SMART Selective self-test log data structure revision number 1
+ SPAN  MIN_LBA  MAX_LBA  CURRENT_TEST_STATUS
+    1        0        0  Not_testing
+    2        0        0  Not_testing
+    3        0        0  Not_testing
+    4        0        0  Not_testing
+    5        0        0  Not_testing
+Selective self-test flags (0x0):
+  After scanning selected spans, do NOT read-scan remainder of disk.
+If Selective self-test is pending on power-up, resume after 0 minute delay.
+
+..start selftest...
+smartctl version 5.38 [x86_64-unknown-linux-gnu] Copyright (C) 2002-8 Bruce Allen
+Home page is http://smartmontools.sourceforge.net/
+
+=== START OF OFFLINE IMMEDIATE AND SELF-TEST SECTION ===
+Sending command: "Execute SMART Short self-test routine immediately in off-line mode".
+Drive command "Execute SMART Short self-test routine immediately in off-line mode" successful.
+Testing has begun.
+Please wait 2 minutes for test to complete.
+Test will complete after Wed Jun  1 06:46:16 2011
+
+Use smartctl -X to abort test.
+smartctl version 5.38 [x86_64-unknown-linux-gnu] Copyright (C) 2002-8 Bruce Allen
+Home page is http://smartmontools.sourceforge.net/
+
+=== START OF OFFLINE IMMEDIATE AND SELF-TEST SECTION ===
+Sending command: "Execute SMART Short self-test routine immediately in off-line mode".
+Drive command "Execute SMART Short self-test routine immediately in off-line mode" successful.
+Testing has begun.
+Please wait 2 minutes for test to complete.
+Test will complete after Wed Jun  1 06:46:16 2011
+
+Use smartctl -X to abort test.
+..waiting 3 min...
+smartctl version 5.38 [x86_64-unknown-linux-gnu] Copyright (C) 2002-8 Bruce Allen
+Home page is http://smartmontools.sourceforge.net/
+
+=== START OF READ SMART DATA SECTION ===
+SMART Self-test log structure revision number 1
+Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA_of_first_error
+# 1  Short offline       Completed without error       00%      9443         -
+# 2  Short offline       Completed without error       00%      9419         -
+# 3  Short offline       Completed without error       00%      9395         -
+# 4  Short offline       Completed without error       00%      9371         -
+# 5  Short offline       Completed without error       00%      9347         -
+# 6  Short offline       Completed without error       00%      9323         -
+# 7  Short offline       Completed without error       00%      9300         -
+# 8  Short offline       Completed without error       00%      9275         -
+# 9  Short offline       Completed without error       00%      9251         -
+#10  Short offline       Completed without error       00%      9228         -
+#11  Short offline       Completed without error       00%      9204         -
+#12  Short offline       Completed without error       00%      9180         -
+#13  Short offline       Completed without error       00%      9155         -
+#14  Short offline       Completed without error       00%      9132         -
+#15  Short offline       Completed without error       00%      9108         -
+#16  Short offline       Completed without error       00%      9084         -
+#17  Short offline       Completed without error       00%      9060         -
+#18  Short offline       Completed without error       00%      9036         -
+#19  Short offline       Completed without error       00%      9012         -
+#20  Short offline       Completed without error       00%      8988         -
+#21  Short offline       Completed without error       00%      8964         -
+
+smartctl version 5.38 [x86_64-unknown-linux-gnu] Copyright (C) 2002-8 Bruce Allen
+Home page is http://smartmontools.sourceforge.net/
+
+=== START OF READ SMART DATA SECTION ===
+SMART Self-test log structure revision number 1
+Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA_of_first_error
+# 1  Short offline       Completed without error       00%     12922         -
+# 2  Short offline       Completed without error       00%     12898         -
+# 3  Short offline       Completed without error       00%     12874         -
+# 4  Short offline       Completed without error       00%     12850         -
+# 5  Short offline       Completed without error       00%     12826         -
+# 6  Short offline       Completed without error       00%     12801         -
+# 7  Short offline       Completed without error       00%     12778         -
+# 8  Short offline       Completed without error       00%     12754         -
+# 9  Short offline       Completed without error       00%     12730         -
+#10  Short offline       Completed without error       00%     12706         -
+#11  Short offline       Completed without error       00%     12682         -
+#12  Short offline       Completed without error       00%     12658         -
+#13  Short offline       Completed without error       00%     12634         -
+#14  Short offline       Completed without error       00%     12610         -
+#15  Short offline       Completed without error       00%     12586         -
+#16  Short offline       Completed without error       00%     12562         -
+#17  Short offline       Completed without error       00%     12538         -
+#18  Short offline       Completed without error       00%     12514         -
+#19  Short offline       Completed without error       00%     12490         -
+#20  Short offline       Completed without error       00%     12466         -
+#21  Short offline       Completed without error       00%     12442         -
+
+
+
