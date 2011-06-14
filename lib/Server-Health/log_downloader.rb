@@ -1,7 +1,17 @@
+# This module encapsulates functionality related to the downloads of log files
+# from a remote server over ssh and scp.
+#--
+# Copyright (c) 2011 Marcus Nasarek
+# Licensed under GPL. No warranty is provided.
+
 require 'net/ssh'
 require 'net/scp'
 
 module ServerHealth
+  # Class of the Downloader
+  #
+  # :call-seq:
+  #    LogDownloader.new(server, username, password)
   class LogDownloader
     
     attr_reader :files, :downloads
@@ -12,6 +22,10 @@ module ServerHealth
       @pw = pw
     end
     
+    # Gets the remote server name
+    #
+    # :call-seq:
+    #    LogDownloader.get_remote_hostname()   -> string 
     def get_remote_hostname()
       hostname = nil
       Net::SSH.start(@servername, @username, :password => @pw) do |ssh|
@@ -20,6 +34,15 @@ module ServerHealth
       return hostname
     end
     
+    # Gets the logs from a specific directory of the remote server and
+    # copies them to a local directory
+    #
+    # :call-seq:
+    #    LogDownloader.download_new_logs(remote_dir, local_dir, exclude_list)   -> array
+    #
+    # An optional array with filenames that should be excluded can be given.
+    # The methods combines other methods from this class and returns an array
+    # with the downloaded filenames. 
     def download_new_logs(remote_dir, local_dir, exclude_list = [])
       file_list = []
       long_file_list = ""

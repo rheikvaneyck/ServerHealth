@@ -1,14 +1,18 @@
 ServerHealth
 
-..is a ruby program for monitoring linux server. Development is in progress, plan is to alow remote monitoring of server health parameter:
+..is a ruby program for monitoring linux server. Development is in progress, 
+plan is to alow remote monitoring of server health parameter:
 
 - RAID status
 - hard disk smart parameter
 - visualize the disk usage
 
-Current idea is to use sqlite3 as the database to store all the data in. The Google-chart-API is utilized to visualize the data. SSH and the ruby ssh gem, respectively is used to access log data on the server.
+Current idea is to use sqlite3 as the database to store all the data in. The 
+Google-chart-API is utilized to visualize the data. SSH and the ruby ssh gem, 
+respectively is used to access log data on the server.
 
-The current work is in a very early develpment state, so u can not use this tool right now.
+The current work is in a very early develpment state, so u can not use this 
+tool right now.
 
 Enjoy watching the progress or despair of it.
 

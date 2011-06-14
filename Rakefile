@@ -11,11 +11,10 @@ Hoe.plugin :newgem
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
 $hoe = Hoe.spec 'Server-Health' do
-  self.developer 'FIXME full name', 'FIXME email'
+  self.developer 'Rheik van Eyck', 'rheikvaneyck@yahoo.de'
   self.post_install_message = 'PostInstall.txt' # TODO remove if post-install message not required
   self.rubyforge_name       = self.name # TODO this is default value
-  # self.extra_deps         = [['activesupport','>= 2.0.2']]
-
+  self.extra_deps         = [['net-ssh','>= 2.1.4]',['net-scp','>= 1.0.4']]
 end
 
 require 'newgem/tasks'
