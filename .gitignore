@@ -4,3 +4,4 @@ tmp/**/*
 db/*.sqlite
 .project
 *.komodoproject
+config/credentials.yml

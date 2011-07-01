@@ -1,6 +1,16 @@
+# This module encapsulates functionality related to the connection to the 
+# database. 
+#--
+# Copyright (c) 2011 Marcus Nasarek
+# Licensed under GPL. No warranty is provided.
+
 require 'sqlite3'
 
 module ServerHealth
+  # Class of the Database Connector
+  #
+  # :call-seq:
+  #    DBConnector.new(database_name)
   class DBConnector
     
     def initialize(db_name)
@@ -8,6 +18,10 @@ module ServerHealth
       @db.execute( "pragma foreign_keys = on")
     end
     
+    # Gets the encoding of the database
+    #
+    # :call-seq:
+    #    DBConnector.encoding()   -> string 
     def encoding()
       return @db.encoding
     end
