@@ -27,5 +27,17 @@ class TestNormedArray < Test::Unit::TestCase
       assert_equal 45.0, data.max
     end
   end
+  context "norm an date array" do
+    setup do
+      @a = ServerHealth::NormedDateArray.new(["2011-06-01 06:47","2011-06-02 06:48","2011-06-03 06:50"])     
+    end
+    should "return min and max values" do
+      dates = @a.get_normed_dates
+      assert_equal 0, dates.min
+      assert_equal 50, dates[1]
+      assert_equal 100, dates.max
+    end
+  end
+
 end
 

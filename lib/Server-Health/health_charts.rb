@@ -80,11 +80,11 @@ module ServerHealth
     def get_url
       # FIXME: how to draw a xy line chart??
       GoogleChart::LineChart.new(@size, @title, @xy_chart) do |lcxy|
-        lcxy.data @data_title, @hd1_data, @data1_color
-        lcxy.data @data2_title, @hd2_data, @data2_color
+        lcxy.data @data_title, @storage_data, @data_color
         lcxy.data_encoding = :text
         #lc.max_value to_value
         lcxy.axis :y, :labels => @data_labels, :color => 'cccccc', :font_size => 16, :alignment => :center
+        lcxy.axis :x, :labels => @time_labels, :color => 'cccccc', :font_size => 16, :alignment => :center
         @url = lcxy.to_url
       end
       puts @url

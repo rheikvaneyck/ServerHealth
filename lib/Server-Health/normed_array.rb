@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+require 'date'
+
 module ServerHealth
   class NormedArray
     attr_reader :max_value, :min_value
@@ -37,6 +39,22 @@ module ServerHealth
       else
         value_range = to_value - from_value
         @normed_array.collect {|i| ((i-from_value).to_f/value_range)*100 }
+      end
+    end
+  end
+  
+  class NormedDateArray
+    attr_accessor :dates
+    
+    def initialize(dates = [])
+      @dates = dates
+    end
+    def get_normed_dates
+      unless @dates.empty?
+        first = Date.parse(@dates.first)
+        @dates.collect!{|d| (Date.parse(d) - first).to_i}
+        @normed_dates = NormedArray.new(@dates)
+        return @normed_dates.get_normed_data
       end
     end
   end  
