@@ -6,16 +6,16 @@
 	    <META NAME="GENERATOR" CONTENT="GtkHTML/3.32.2">
 	</head>
 	<body style="font-family: sans-serif;">
-		<h1 style="color: #555;font-weight: bold;font-size: larger;border-bottom: solid 1px #555;"><%="Server Festplattenzustand - #{Time.now.strftime("%d.%m.%Y")}"%></h1>
+		<h1 style="color: #555;font-weight: bold;font-size: larger;border-bottom: solid 1px #555;">Server Festplattenzustand - 09.07.2011</h1>
 		<DIV style="clear: both;margin-left: 50px;">
 		<h2 style="margin: 20px 0px 0px 20px;font-size: medium;color: #555;">---- Funktionstest</h2>
 		    <DIV ID="hd1_error_state" style="width: 200px;height: 100px;border: solid 2px #bbb;float: left;margin: 10px;">
 		      <H3 style="font-size: small;background-color: #bbb;margin: 0px;padding: 5px 0px 5px 0px;text-align: center;">HDD 1 Fehlerstatus</H3>
-		      <P style="font-size: medium;text-align: center;"><%="#{@hd1_error_state}"%></P>
+		      <P style="font-size: medium;text-align: center;">No Error</P>
 		    </DIV>
 		    <DIV ID="hd2_error_state" style="width: 200px;height: 100px;border: solid 2px #bbb;float: left;margin: 10px;">
 		      <h3 style="font-size: small;background-color: #bbb;margin: 0px;padding: 5px 0px 5px 0px;text-align: center;">HDD 2 Fehlerstatus</H3>
-		      <P  style="font-size: medium;text-align: center;"><%="#{@hd2_error_state}"%></P>
+		      <P  style="font-size: medium;text-align: center;">No Error</P>
 		    </DIV>
 		</DIV>
 		<div style="clear: both;margin: 30px 0px 0px 60px;">
@@ -34,30 +34,30 @@
 			    </tr>
 			    <tr>
 				<td style="border-bottom: 1px dashed lightgrey;">Lesefehler</td>
-				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd1_Raw_Read_Error_Rate}"%></td>
-				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd2_Raw_Read_Error_Rate}"%></td><!-- Raw_Read_Error_Rate -->
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;">0</td>
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;">0</td><!-- Raw_Read_Error_Rate -->
 			    </tr>
 			    <tr>
 				<td style="border-bottom: 1px dashed lightgrey;">Neuzugewiesene Sectoren</td>
-				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd1_Reallocated_Sector_Ct}"%></td>
-				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd2_Reallocated_Sector_Ct}"%></td><!-- Reallocated_Sector_Ct -->
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;">0</td>
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;">0</td><!-- Reallocated_Sector_Ct -->
 			    </tr>
 			    <tr>
 				<td style="border-bottom: 1px dashed lightgrey;">Nicht wiederherstellbar</td>
-				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd1_Offline_Uncorrectable}"%></td>
-				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd2_Offline_Uncorrectable}"%></td><!-- Offline_Uncorrectable -->
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;">0</td>
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;">0</td><!-- Offline_Uncorrectable -->
 			    </tr>
 			    <tr>
 				<td>Neuzuweisungen</td>
-				<td style="text-align: center;"><%= "#{@hd1_Reallocated_Event_Count}"%></td>
-				<td style="text-align: center;"><%= "#{@hd2_Reallocated_Event_Count}"%></td><!-- Reallocated_Event_Count -->
+				<td style="text-align: center;">0</td>
+				<td style="text-align: center;">0</td><!-- Reallocated_Event_Count -->
 			    </tr>
 			</tbody>
 		    </TABLE>
 		</div>
 		<DIV style="clear: both;margin-left: 50px;padding-top: 1px;">
 		<h2 style="margin: 20px 0px 0px 20px;font-size: medium;color: #555;">---- Festplattennutzung</h2>
-		    <IMG SRC="<%= @storage_pie_path %>" ALIGN="bottom" BORDER="0" ALT="Storage Pie" style="border: solid 2px #bbb;width 250px;height: 250px;margin: 10px;">
+		    <IMG SRC="../downloads/chart-2011-07-01-20-49.png" ALIGN="bottom" BORDER="0" ALT="Storage Pie" style="border: solid 2px #bbb;width 250px;height: 250px;margin: 10px;">
 		</DIV>
 	</BODY>
 </HTML>
