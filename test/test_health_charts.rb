@@ -52,7 +52,7 @@ class TestHealthCharts < Test::Unit::TestCase
       assert_equal "Storage consumption", @c.data_title
     end
     should "return the chart url and no empty string" do
-      # assert_not_equal "", @c.get_url
+      assert_not_equal "", @c.get_url
     end
   end
 end

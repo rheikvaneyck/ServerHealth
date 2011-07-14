@@ -44,6 +44,7 @@ module ServerHealth
       table_hash[:cols].keys.each do |c|
         cols << %{#{c} #{table_hash[:cols][c.to_sym]}}
       end
+      cols << %{CONSTRAINT #{table_hash[:constraint]}} unless table_hash[:constraint].nil?
       cmd = cmd + cols.join(",") + ")"
       puts %{Command: "#{cmd}"} if $DEBUG
       @db.execute(cmd)

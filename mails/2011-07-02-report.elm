@@ -73,7 +73,7 @@ Content-Transfer-Encoding: 8bit
 		</div>
 		<DIV style="clear: both;margin-left: 50px;padding-top: 1px;">
 		<h2 style="margin: 20px 0px 0px 20px;font-size: medium;color: #555;">---- Festplattennutzung</h2>
-		    <IMG SRC='cid:1310239135.serverhealth@nbbln0007' ALIGN="bottom" BORDER="0" ALT="Storage Pie" style="border: solid 2px #bbb;width 250px;height: 250px;margin: 10px;">
+		    <IMG SRC="cid:1310239135.serverhealth@nbbln0007" ALIGN="bottom" BORDER="0" ALT="Storage Pie" style="border: solid 2px #bbb;width 250px;height: 250px;margin: 10px;">
 		</DIV>
 	</BODY>
 </HTML>
