@@ -2,6 +2,7 @@
 require 'optparse'
 module ServerHealth
   class Options
+<<<<<<< HEAD
     DATABASE_DIR = "db"
     DATABASE_FILE = "health-logs.sqlite"   
     CONFIG_DIR = "config"
@@ -24,12 +25,16 @@ module ServerHealth
       @remote_log_dir = REMOTE_LOG_DIR
       @local_log_dir = LOCAL_LOG_DIR
       
+=======
+    def initialize(argv)
+>>>>>>> 80a65d3b7aad3d7d3276bbe095b1e84163de46d9
       parse(argv)
     end
     private
     def parse(argv)
       OptionParser.new do |opts|
         opts.banner = "Usage: server_health [ options ]"
+<<<<<<< HEAD
         opts.on("-d", "--db-dir path", String, "Path to directory") do |db|
           @database_dir = db
         end
@@ -48,6 +53,8 @@ module ServerHealth
         opts.on("-l", "--local-log-dir path", String, "Path to directory") do |l|
           @local_log_dir = l
         end
+=======
+>>>>>>> 80a65d3b7aad3d7d3276bbe095b1e84163de46d9
         opts.on("-h", "--help", "Show this message") do
           puts opts
           exit
