@@ -1,6 +1,7 @@
 *.swp
 *~
 tmp/**/*
+downloads/**/*
 db/*.sqlite
 .project
 *.komodoproject
