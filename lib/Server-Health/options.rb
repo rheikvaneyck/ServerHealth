@@ -8,6 +8,8 @@ module ServerHealth
     CREDENTIAL_FILE = "credentials.yml"
     REMOTE_LOG_DIR = "/var/log/health"
     LOCAL_LOG_DIR = "downloads"
+    REPORT_DIR = "reports"
+    REPORT_TEMPLATE = "report_template.html.erb"
     
     attr_reader :database_dir
     attr_reader :database_file
@@ -15,6 +17,8 @@ module ServerHealth
     attr_reader :credential_file
     attr_reader :remote_log_dir
     attr_reader :local_log_dir
+    attr_reader :report_dir
+    attr_reader :report_template
     
     def initialize(argv)
       @database_dir = DATABASE_DIR
@@ -23,6 +27,8 @@ module ServerHealth
       @credential_file = CREDENTIAL_FILE
       @remote_log_dir = REMOTE_LOG_DIR
       @local_log_dir = LOCAL_LOG_DIR
+      @report_dir = REPORT_DIR
+      @report_template = REPORT_TEMPLATE
       
       parse(argv)
     end
@@ -47,6 +53,12 @@ module ServerHealth
         end
         opts.on("-l", "--local-log-dir path", String, "Path to directory") do |l|
           @local_log_dir = l
+        end
+        opts.on("-p", "--reports-dir path", String, "Path to directory") do |p|
+          @reports_dir = p
+        end
+        opts.on("-t", "--report-template file", String, "Path to directory") do |t|
+          @report_template = t
         end
         opts.on("-h", "--help", "Show this message") do
           puts opts
