@@ -15,15 +15,18 @@ module ServerHealth
   class Runner
     
     def initialize(argv)
-      @options = Options.new(argv)
+      @options = ServerHealth::Options.new(argv)
       @db = ServerHealth::DBManager.new(File.join(@options.database_dir, @options.database_file))
     end
     
     def run
       # Download Log Files
       # file_list = download_log_files
-      # initial load if log files already downloaded 
-      file_list = Dir[File.join(@options.local_log_dir,"*.log")]
+      # initial load if log files already downloaded
+      file_list = []
+      Dir.chdir(@options.local_log_dir) do
+        file_list = Dir.glob("*.log")
+      end
       
       # Insert the log files and timestamps into the DB
       import_log_files file_list
@@ -57,39 +60,40 @@ module ServerHealth
     def import_log_files(file_list)
       health_data = ServerHealth::HealthData.new()
       file_list.sort.each do |file|
-      log_file = nil
-      timestamp = ""
-      begin
-        timestamp = Helper::HelperClass.timestamp_from_filename(file).to_s
-        health_data.parse_health_file(File.join(@options.local_log_dir, file))
-        log_file = @db.insert_record(ServerHealth::DBManager::LogFile, {:file_name => file, :file_date => timestamp})
-        puts "Log file #{file} imported" if $DEBUG
-      rescue
-        puts "couldn't process #{file} for import in table 'log_files'"         
+        log_file = nil
+        timestamp = ""
+        begin
+          timestamp = Helper::HelperClass.timestamp_from_filename(file).to_s
+          health_data.parse_health_file(File.join(@options.local_log_dir, file))
+          log_file = @db.insert_record(ServerHealth::DBManager::LogFile, {:file_name => file, :file_date => timestamp})
+          puts "Log file #{file} imported" if $DEBUG
+        rescue
+          puts "couldn't process #{file} for import in table 'log_files'"         
+        end
+        begin
+          @db.insert_record(ServerHealth::DBManager::HealthState, {
+            :file_id => log_file.id,
+            :raid_state => health_data.raid_state,
+            :hd1_error_state => health_data.hd1_error_state,
+            :hd2_error_state => health_data.hd2_error_state,
+            :hd1_Raw_Read_Error_Rate => health_data.hd1_Raw_Read_Error_Rate,
+            :hd2_Raw_Read_Error_Rate => health_data.hd2_Raw_Read_Error_Rate,
+            :hd1_Reallocated_Sector_Ct => health_data.hd1_Reallocated_Sector_Ct,
+            :hd2_Reallocated_Sector_Ct => health_data.hd2_Reallocated_Sector_Ct,
+            :hd1_Offline_Uncorrectable => health_data.hd1_Offline_Uncorrectable,
+            :hd2_Offline_Uncorrectable => health_data.hd2_Offline_Uncorrectable,
+            :hd1_Reallocated_Event_Count => health_data.hd1_Reallocated_Event_Count,
+            :hd2_Reallocated_Event_Count => health_data.hd2_Reallocated_Event_Count,
+            :hd1_run_time => health_data.hd1_run_time,
+            :hd2_run_time => health_data.hd2_run_time,
+            :hd_space_used => health_data.hd_space_used,
+            :hd_space_left => health_data.hd_space_left
+          }) unless log_file.nil?
+          puts "Health file #{file} imported" if $DEBUG
+        rescue
+          puts "couldn't process #{file} for import in table 'health_states"         
+        end
       end
-      begin
-        @db.insert_record(ServerHealth::DBManager::HealthState, {
-          :file_id => log_file.id,
-          :raid_state => health_data.raid_state,
-          :hd1_error_state => health_data.hd1_error_state,
-          :hd2_error_state => health_data.hd2_error_state,
-          :hd1_Raw_Read_Error_Rate => health_data.hd1_Raw_Read_Error_Rate,
-          :hd2_Raw_Read_Error_Rate => health_data.hd2_Raw_Read_Error_Rate,
-          :hd1_Reallocated_Sector_Ct => health_data.hd1_Reallocated_Sector_Ct,
-          :hd2_Reallocated_Sector_Ct => health_data.hd2_Reallocated_Sector_Ct,
-          :hd1_Offline_Uncorrectable => health_data.hd1_Offline_Uncorrectable,
-          :hd2_Offline_Uncorrectable => health_data.hd2_Offline_Uncorrectable,
-          :hd1_Reallocated_Event_Count => health_data.hd1_Reallocated_Event_Count,
-          :hd2_Reallocated_Event_Count => health_data.hd2_Reallocated_Event_Count,
-          :hd1_run_time => health_data.hd1_run_time,
-          :hd2_run_time => health_data.hd2_run_time,
-          :hd_space_used => health_data.hd_space_used,
-          :hd_space_left => health_data.hd_space_left
-        } unless log_file.nil?
-        puts "Health file #{file} imported" if $DEBUG
-      rescue
-        puts "couldn't process #{file} for import in table 'health_states"         
-      end          
     end
     def create_storage_chart
       current_health_state = ServerHealth::DBManager::HealthState.find(:last)
