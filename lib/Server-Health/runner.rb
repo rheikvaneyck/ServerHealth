@@ -30,16 +30,16 @@ module ServerHealth
       
       # Visualize Data
       # 1. Storage Pie
-      storage_pie_file = create_storage_chart
+      # storage_pie_file = create_storage_chart
       
       # Generate Report
-      report_file = generate_report
+      # report_file = generate_report
       
       # Generate E-Mail
-      elm_file = generate_email storage_pie_file, report_file
+      # elm_file = generate_email storage_pie_file, report_file
     
       # Send Report
-      send_report elm_file
+      # send_report elm_file
 	  
       puts "Finished."
     end
@@ -53,7 +53,7 @@ module ServerHealth
       
       log_downloader = ServerHealth::LogDownloader.new(credentials[:ssh_server],credentials[:ssh_user],credentials[:ssh_pw])
       return log_downloader.download_new_logs(@options.remote_log_dir, @options.local_log_dir, exclude_list)
-  	end
+    end
     def import_log_files(file_list)
       health_data = ServerHealth::HealthData.new()
       file_list.sort.each do |file|
