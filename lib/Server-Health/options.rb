@@ -75,10 +75,10 @@ module ServerHealth
       current_health_state = ServerHealth::DBManager::HealthState.find(:last)
       hd_space_used = current_health_state.hd_space_used
       hd_space_left = current_health_state.hd_space_left
-      @c = ServerHealth::StoragePie.new(hd_space_used,hd_space_left)
-      storage_pie_url = @c.get_url
-      @cd = ServerHealth::ChartDownloader.new(@options.reports_dir,"storage-")
-      storage_pie_file = @cd.download_chart(storage_pie_url)
+      c = ServerHealth::StoragePie.new(hd_space_used,hd_space_left)
+      storage_pie_url = c.get_url
+      cd = ServerHealth::ChartDownloader.new(@options.reports_dir,"storage-")
+      storage_pie_file = cd.download_chart(storage_pie_url)
 
       # Generate Report
       template_file = File.join(@options.reports_dir, @options.report_template)
@@ -95,25 +95,25 @@ module ServerHealth
         :hd2_Reallocated_Event_Count => current_health_state.hd2_Reallocated_Event_Count,
         :storage_pie_path => File.join(@options.reports_dir, storage_pie_file)
       }
-      @report = ServerHealth::Report.new(template_file, values_reported)
+      report = ServerHealth::Report.new(template_file, values_reported)
       report_file = Time.now.strftime("%Y-%m-%d-report.html")
-      @report.generate(File.join(@options.reports_dir,report_file))
+      report.generate(File.join(@options.reports_dir,report_file))
       
-	    # Generate E-Mail
+      # Generate E-Mail
       images = [File.join(@options.reports_dir,storage_pie_file)]
-      @email = ServerHealth::EMail.new(images)
-	    @email.import_html(File.join(@options.reports_dir,report_file))
+      email = ServerHealth::EMail.new(images)
+      email.import_html(File.join(@options.reports_dir,report_file))
 	    elm_file = Time.now.strftime("%Y-%m-%d-report.elm")
-      @email.create_elm(File.join(@options.email_dir,elm_file))
+      email.create_elm(File.join(@options.email_dir,elm_file))
 	  
       # Send Report
       credential_keys = ["smtp_user", "smtp_pw", "smtp_server", "smtp_port", "smtp_host", "email_from", "email_to"]
-      @credentials = c.read_from_yaml(File.join(@options.config_dir,@options.credential_file),credential_keys)
-      @email_sender = ServerHealth::MailSender.new(File.join(@options.email_dir,elm_file), @credentials)
+      credentials = c.read_from_yaml(File.join(@options.config_dir,@options.credential_file),credential_keys)
+      email_sender = ServerHealth::MailSender.new(File.join(@options.email_dir,elm_file), credentials)
       subject = "Server Health Report vom #{Time.now.strftime("%d. %m. %Y")}"
       email_envelop = "From: #{credentials[:email_from]}\nTo: #{credentials[:email_to]}\nSubject: #{subject}\n"
-      @email_sender.mail_text = email_envelop + @email_sender.mail_text
-      @email_sender.send_report(credentials[:email_from], [credentials[:email_to]])
+      email_sender.mail_text = email_envelop + email_sender.mail_text
+      email_sender.send_report(credentials[:email_from], [credentials[:email_to]])
 	  
       puts "Finished."
     end
