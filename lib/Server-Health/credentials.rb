@@ -4,11 +4,8 @@ require 'yaml'
 module ServerHealth
   class Credentials
     
-    def initialize()
+    def self.read_from_yaml(file_name, credential_keys = [])
       @ret_hash = {}
-    end
-    
-    def read_from_yaml(file_name, credential_keys = [])
       data = IO.read(file_name) if File.exists?(file_name)
       props = YAML.load(data)
       credential_keys.each do |c|
@@ -16,7 +13,7 @@ module ServerHealth
         @ret_hash.merge!(h)
       end
 
-      return (@ret_hash)
+      return @ret_hash
     end
     
   end
