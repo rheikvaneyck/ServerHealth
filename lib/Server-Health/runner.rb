@@ -42,19 +42,19 @@ module ServerHealth
       puts "Finished."
     end
 	
-	private
-	def download_log_files
-    exclude_list = @db.get_column(ServerHealth::DBManager::LogFile, :file_name) # get in here the files that are allready in the database
-    
-    credential_keys = ["ssh_user", "ssh_pw", "ssh_server"]
-    credentials = ServerHealth::Credentials.read_from_yaml(File.join(options.config_dir,options.credential_file), credential_keys)
-    
-    log_downloader = ServerHealth::LogDownloader.new(credentials[:ssh_server],credentials[:ssh_user],credentials[:ssh_pw])
-    return log_downloader.download_new_logs(@options.remote_log_dir, @options.local_log_dir, exclude_list)
-	end
-  def import_log_files(file_list)
-    health_data = ServerHealth::HealthData.new()
-    file_list.sort.each do |file|
+    private
+  	def download_log_files
+      exclude_list = @db.get_column(ServerHealth::DBManager::LogFile, :file_name) # get in here the files that are allready in the database
+      
+      credential_keys = ["ssh_user", "ssh_pw", "ssh_server"]
+      credentials = ServerHealth::Credentials.read_from_yaml(File.join(options.config_dir,options.credential_file), credential_keys)
+      
+      log_downloader = ServerHealth::LogDownloader.new(credentials[:ssh_server],credentials[:ssh_user],credentials[:ssh_pw])
+      return log_downloader.download_new_logs(@options.remote_log_dir, @options.local_log_dir, exclude_list)
+  	end
+    def import_log_files(file_list)
+      health_data = ServerHealth::HealthData.new()
+      file_list.sort.each do |file|
       log_file = nil
       timestamp = ""
       begin
