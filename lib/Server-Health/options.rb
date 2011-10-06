@@ -17,7 +17,6 @@ module ServerHealth
     def initialize(argv)
       @options = Options.new(argv)
       @db = ServerHealth::DBManager.new(File.join(@options.database_dir, @options.database_file))
-      @hc = Helper::HelperClass.new()
     end
     
     def run
@@ -38,7 +37,7 @@ module ServerHealth
         log_file = nil
         timestamp = ""
         begin
-          timestamp = @hc.timestamp_from_filename(file).to_s
+          timestamp = Helper::HelperClass.timestamp_from_filename(file).to_s
           health_data.parse_health_file(File.join(@options.local_log_dir, file))
           log_file = @db.insert_record(ServerHealth::DBManager::LogFile, {:file_name => file, :file_date => timestamp})
           puts "Log file #{file} imported" if $DEBUG
