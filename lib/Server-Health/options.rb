@@ -10,6 +10,7 @@ module ServerHealth
     LOCAL_LOG_DIR = "downloads"
     REPORT_DIR = "reports"
     REPORT_TEMPLATE = "report_template.html.erb"
+    EMAIL_DIR = "email"
     
     attr_reader :database_dir
     attr_reader :database_file
@@ -19,6 +20,7 @@ module ServerHealth
     attr_reader :local_log_dir
     attr_reader :report_dir
     attr_reader :report_template
+    attr_reader :email_dir
     
     def initialize(argv)
       @database_dir = DATABASE_DIR
@@ -29,6 +31,7 @@ module ServerHealth
       @local_log_dir = LOCAL_LOG_DIR
       @report_dir = REPORT_DIR
       @report_template = REPORT_TEMPLATE
+      @email_dir = EMAIL_DIR
       
       parse(argv)
     end
@@ -59,6 +62,9 @@ module ServerHealth
         end
         opts.on("-t", "--report-template file", String, "Path to directory") do |t|
           @report_template = t
+        end
+        opts.on("-e", "--email-dir path", String, "Path to directory") do |e|
+          @email_dir = e
         end
         opts.on("-h", "--help", "Show this message") do
           puts opts
