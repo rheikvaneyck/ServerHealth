@@ -13,9 +13,10 @@ respectively is used to access log data on the server.
 
 Some other gems are also used:
 
-- activerecord
-- shoulda
-- hoe
+- activerecord for database management
+- shoulda for tests
+- hoe for deployment
+- gchartrb for creating beautiful charts
 
 The current work is in a very early develpment state, so u can not use this 
 tool right now.
