@@ -129,7 +129,7 @@ module ServerHealth
       
       return elm_file
     end
-    def send_report elm_file
+    def send_report(elm_file)
       credential_keys = ["smtp_user", "smtp_pw", "smtp_server", "smtp_port", "smtp_host", "email_from", "email_to"]
       credentials = ServerHealth::Credentials.read_from_yaml(File.join(@options.config_dir,@options.credential_file),credential_keys)
       email_sender = ServerHealth::MailSender.new(File.join(@options.email_dir,elm_file), credentials)
