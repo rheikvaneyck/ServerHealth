@@ -30,11 +30,14 @@ tool right now.
 
 - net-ssh
 - net-scp
-- google-charts
+- activerecord
+- shoulda
+- hoe
+- gchartrb
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* FIX ME (sudo gem install, anything else)
 
 == LICENSE:
 
