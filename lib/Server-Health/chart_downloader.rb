@@ -15,18 +15,18 @@ module ServerHealth
       if filename.empty? then
         filename = file_name
       end
-      puts url
-      puts filename
-      puts @chart_server
+      puts url if $DEBUG
+      puts filename if $DEBUG 
+      puts @chart_server if $DEBUG
       Net::HTTP.start(@chart_server) do |http|
         resp = http.get(url)
         if resp.message == "OK"
           open(File.join(@download_path, filename), "wb") do |file|
             file.write(resp.body)
           end
-          return true
+          return filename
         else
-          return false
+          return nil
         end
       end
     end
