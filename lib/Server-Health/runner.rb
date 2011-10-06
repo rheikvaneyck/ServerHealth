@@ -28,27 +28,19 @@ module ServerHealth
       file_list = log_downloader.download_new_logs(@options.remote_log_dir, @options.local_log_dir, exclude_list)
       
       # Insert the log files and timestamps into the DB
+      health_data = ServerHealth::HealthData.new()
       file_list.sort.each do |file|
         begin
           timestamp = @hc.timestamp_from_filename(file).to_s
-          @db.insert_record(ServerHealth::DBManager::LogFile, {:file_name => file, :file_date => timestamp})
+          health_data.parse_health_file(File.join(@options.local_log_dir, file))
+          log_file = @db.insert_record(ServerHealth::DBManager::LogFile, {:file_name => file, :file_date => timestamp})
           puts "Log file #{file} imported" if $DEBUG
         rescue
           puts "couldn't process #{file} for import in table 'log_files'"         
         end
-      end
-      
-      # Insert the parsed data from the log files regarding to the log file id into the DB
-      health_data = ServerHealth::HealthData.new()
-      file_ids = []
-      file_list.sort.each do |file|
         begin
-          ## FIX FROM HERE to new database class
-          file_ids = @db.get_rows("log_files",["id"], "file_name = '#{file}'")[0].join
-          health_data.parse_health_file(File.join(@options.local_log_dir, file))
-          
-          data_hash = { :table => "health_status", :cols => {
-            :file_id => file_ids.to_s,
+          @db.insert_record(ServerHealth::DBManager::HealthState, {
+            :file_id => log_file.id,
             :raid_state => health_data.raid_state,
             :hd1_error_state => health_data.hd1_error_state,
             :hd2_error_state => health_data.hd2_error_state,
@@ -64,13 +56,12 @@ module ServerHealth
             :hd2_run_time => health_data.hd2_run_time,
             :hd_space_used => health_data.hd_space_used,
             :hd_space_left => health_data.hd_space_left
-          }}
-          @db.insert_data(data_hash)
+          }
         rescue
           puts "couldn't process #{file} for import in table 'health_status"         
-        end
+        end          
       end
-      
+            
       # Visualize Data
       
       # Send Report
