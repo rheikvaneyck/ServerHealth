@@ -66,6 +66,36 @@ module ServerHealth
       end
             
       # Visualize Data
+      # 1. Storage Pie
+      current_health_state = ServerHealth::DBManager::HealthState.find(:last)
+      hd_space_used = current_health_state.hd_space_used
+      hd_space_left = current_health_state.hd_space_left
+      @c = ServerHealth::StoragePie.new(hd_space_used,hd_space_left)
+      storage_pie_url = @c.get_url
+      @cd = ServerHealth::ChartDownloader.new(@options.reports_dir,"storage-")
+      @cd.download_chart(storage_pie_url)
+      template_file = File.join(@options.reports_dir, @options.report_template)
+      values_reported = { 
+        :hd1_error_state => current_health_state.hd1_error_state,
+        :hd2_error_state => current_health_state.hd2_error_state,
+        :hd1_Raw_Read_Error_Rate => current_health_state.hd1_Raw_Read_Error_Rate,
+        :hd2_Raw_Read_Error_Rate => current_health_state.hd2_Raw_Read_Error_Rate,
+        :hd1_Reallocated_Sector_Ct => current_health_state.hd1_Reallocated_Sector_Ct,
+        :hd2_Reallocated_Sector_Ct => current_health_state.hd2_Reallocated_Sector_Ct,
+        :hd1_Offline_Uncorrectable => current_health_state.hd1_Offline_Uncorrectable,
+        :hd2_Offline_Uncorrectable => current_health_state.hd2_Offline_Uncorrectable,
+        :hd1_Reallocated_Event_Count => current_health_state.hd1_Reallocated_Event_Count,
+        :hd2_Reallocated_Event_Count => current_health_state.hd2_Reallocated_Event_Count,
+        :storage_pie_path => "../downloads/chart-2011-07-01-20-49.png"
+      }
+      @report = ServerHealth::Report.new(template_file, values_reported)
+    end
+    should "exist" do
+       report_file = Time.now.strftime("%Y-%m-%d-report.html")
+       @report.generate(report_file)
+
+      # Generate Rport
+      
       
       # Send Report
       
