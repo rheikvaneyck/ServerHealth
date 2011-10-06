@@ -26,7 +26,7 @@ module ServerHealth
       exclude_list = @db.get_column(ServerHealth::DBManager::LogFile, :file_name) # get in here the files that are allready in the database
       
       cobj = ServerHealth::Credentials.new()
-    credential_keys = ["ssh_user", "ssh_pw", "ssh_server"]
+      credential_keys = ["ssh_user", "ssh_pw", "ssh_server"]
       credentials = cobj.read_from_yaml(File.join(@options.config_dir,@options.credential_file), credential_keys)
       
       log_downloader = ServerHealth::LogDownloader.new(credentials[:ssh_server],credentials[:ssh_user],credentials[:ssh_pw])
@@ -99,18 +99,18 @@ module ServerHealth
       report_file = Time.now.strftime("%Y-%m-%d-report.html")
       @report.generate(File.join(@options.reports_dir,report_file))
       
-	  # Generate E-Mail
+	    # Generate E-Mail
       images = [File.join(@options.reports_dir,storage_pie_file)]
       @email = ServerHealth::EMail.new(images)
-	  @email.import_html(File.join(@options.reports_dir,report_file))
-	  elm_file = Time.now.strftime("%Y-%m-%d-report.elm")
+	    @email.import_html(File.join(@options.reports_dir,report_file))
+	    elm_file = Time.now.strftime("%Y-%m-%d-report.elm")
       @email.create_elm(File.join(@options.email_dir,elm_file))
 	  
       # Send Report
       credential_keys = ["smtp_user", "smtp_pw", "smtp_server", "smtp_port", "smtp_host", "email_from", "email_to"]
       @credentials = c.read_from_yaml(File.join(@options.config_dir,@options.credential_file),credential_keys)
       @email_sender = ServerHealth::MailSender.new(File.join(@options.email_dir,elm_file), @credentials)
-	  subject = "Server Health Report vom #{Time.now.strftime("%d. %m. %Y")}"
+	    subject = "Server Health Report vom #{Time.now.strftime("%d. %m. %Y")}"
       email_envelop = "From: #{credentials[:email_from]}\nTo: #{credentials[:email_to]}\nSubject: #{subject}\n"
       @email_sender.mail_text = email_envelop + @email_sender.mail_text
       @email_sender.send_report(credentials[:email_from], [credentials[:email_to]])
