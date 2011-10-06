@@ -103,7 +103,7 @@ module ServerHealth
       images = [File.join(@options.reports_dir,storage_pie_file)]
       email = ServerHealth::EMail.new(images)
       email.import_html(File.join(@options.reports_dir,report_file))
-	    elm_file = Time.now.strftime("%Y-%m-%d-report.elm")
+      elm_file = Time.now.strftime("%Y-%m-%d-report.elm")
       email.create_elm(File.join(@options.email_dir,elm_file))
 	  
       # Send Report
