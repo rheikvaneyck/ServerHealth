@@ -43,7 +43,7 @@ module ServerHealth
     end
 	
     private
-  	def download_log_files
+    def download_log_files
       exclude_list = @db.get_column(ServerHealth::DBManager::LogFile, :file_name) # get in here the files that are allready in the database
       
       credential_keys = ["ssh_user", "ssh_pw", "ssh_server"]
