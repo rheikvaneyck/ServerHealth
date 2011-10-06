@@ -22,6 +22,7 @@ module ServerHealth
     def run
       # Download Log Files
       file_list = download_log_files
+      file_list = Dir[File.join(@options.local_log_dir,"*.log")]
       
       # Insert the log files and timestamps into the DB
       import_log_files file_list
