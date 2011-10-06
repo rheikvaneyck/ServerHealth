@@ -11,6 +11,12 @@ Current idea is to use sqlite3 as the database to store all the data in. The
 Google-chart-API is utilized to visualize the data. SSH and the ruby ssh gem, 
 respectively is used to access log data on the server.
 
+Some other gems are also used:
+
+- activerecord
+- shoulda
+- hoe
+
 The current work is in a very early develpment state, so u can not use this 
 tool right now.
 
