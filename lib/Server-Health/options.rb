@@ -110,7 +110,7 @@ module ServerHealth
       credential_keys = ["smtp_user", "smtp_pw", "smtp_server", "smtp_port", "smtp_host", "email_from", "email_to"]
       @credentials = c.read_from_yaml(File.join(@options.config_dir,@options.credential_file),credential_keys)
       @email_sender = ServerHealth::MailSender.new(File.join(@options.email_dir,elm_file), @credentials)
-	    subject = "Server Health Report vom #{Time.now.strftime("%d. %m. %Y")}"
+      subject = "Server Health Report vom #{Time.now.strftime("%d. %m. %Y")}"
       email_envelop = "From: #{credentials[:email_from]}\nTo: #{credentials[:email_to]}\nSubject: #{subject}\n"
       @email_sender.mail_text = email_envelop + @email_sender.mail_text
       @email_sender.send_report(credentials[:email_from], [credentials[:email_to]])
