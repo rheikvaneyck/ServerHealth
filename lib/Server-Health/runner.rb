@@ -30,6 +30,8 @@ module ServerHealth
       # Insert the log files and timestamps into the DB
       health_data = ServerHealth::HealthData.new()
       file_list.sort.each do |file|
+        log_file = nil
+        timestamp = ""
         begin
           timestamp = @hc.timestamp_from_filename(file).to_s
           health_data.parse_health_file(File.join(@options.local_log_dir, file))
@@ -56,9 +58,10 @@ module ServerHealth
             :hd2_run_time => health_data.hd2_run_time,
             :hd_space_used => health_data.hd_space_used,
             :hd_space_left => health_data.hd_space_left
-          }
+          } unless log_file.nil?
+          puts "Health file #{file} imported" if $DEBUG
         rescue
-          puts "couldn't process #{file} for import in table 'health_status"         
+          puts "couldn't process #{file} for import in table 'health_states"         
         end          
       end
             
