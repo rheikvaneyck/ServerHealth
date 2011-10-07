@@ -19,11 +19,11 @@ module ServerHealth
       @template = File.read(template_file)
     end
     
-    def generate(report_file, report_path = "../reports")
+    def generate(report_file)
       b = binding
       @html_file = ERB.new(@template)
       @report = @html_file.result b
-      File.open(File.join(report_path,report_file),'w') do |f|
+      File.open(report_file,'w') do |f|
         f.write(@report)
       end      
     end

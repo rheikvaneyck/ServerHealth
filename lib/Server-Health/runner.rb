@@ -6,6 +6,7 @@ require_relative 'log_downloader'
 require_relative 'health_file_parser'
 # require_relative 'db_connector' is obsolete!!!
 require_relative 'db_manager'
+require_relative 'health_charts'
 require_relative 'chart_downloader'
 require_relative 'generate_report'
 require_relative 'generate_email'
@@ -22,27 +23,30 @@ module ServerHealth
     def run
       # Download Log Files
       file_list = download_log_files
-      puts file_list.length
+      puts "Anzahl neuer Log-Dateien: #{file_list.length}"
       # or: initial load if log files already downloaded
       # file_list = get_files_from_local_dir
+      # puts file_list.length if $DEBUG
       
       # Insert the log files and timestamps into the DB
-      # import_log_files file_list
+      import_log_files file_list unless file_list.length == 0
       
       # Visualize Data
       # 1. Storage Pie
-      # storage_pie_file = create_storage_chart
+      storage_pie_file = create_storage_chart
+      puts "Diagramm zum Speicherverbrauch: #{storage_pie_file}"
       
       # Generate Report
-      # report_file = generate_report
+      report_file = generate_report(storage_pie_file)
+      puts "Statusbericht: #{report_file}"
       
       # Generate E-Mail
-      # elm_file = generate_email storage_pie_file, report_file
+      elm_file = generate_email storage_pie_file, report_file
+      puts "E-Mail-Datei zum Statusbericht: #{elm_file}"
     
       # Send Report
-      # send_report elm_file
-	  
-      puts "Finished."
+      recipients = send_report elm_file
+      puts "E-Mail mit Statusbericht an #{recipients} versandt."
     end
 	
     private      
@@ -58,7 +62,7 @@ module ServerHealth
       exclude_list = @db.get_column(ServerHealth::DBManager::LogFile, :file_name) # get in here the files that are allready in the database
       
       credential_keys = ["ssh_user", "ssh_pw", "ssh_server"]
-      credentials = ServerHealth::Credentials.read_from_yaml(File.join(options.config_dir,options.credential_file), credential_keys)
+      credentials = ServerHealth::Credentials.read_from_yaml(File.join(@options.config_dir,@options.credential_file), credential_keys)
       
       log_downloader = ServerHealth::LogDownloader.new(credentials[:ssh_server],credentials[:ssh_user],credentials[:ssh_pw])
       return log_downloader.download_new_logs(@options.remote_log_dir, @options.local_log_dir, exclude_list)
@@ -107,12 +111,12 @@ module ServerHealth
       hd_space_left = current_health_state.hd_space_left
       c = ServerHealth::StoragePie.new(hd_space_used,hd_space_left)
       storage_pie_url = c.get_url
-      cd = ServerHealth::ChartDownloader.new(@options.reports_dir,"storage-")
+      cd = ServerHealth::ChartDownloader.new(@options.report_dir,"storage-")
       return cd.download_chart(storage_pie_url)
     end
     def generate_report(storage_pie_file)
       current_health_state = ServerHealth::DBManager::HealthState.find(:last)
-      template_file = File.join(@options.reports_dir, @options.report_template)
+      template_file = File.join(@options.report_dir, @options.report_template)
       values_reported = { 
         :hd1_error_state => current_health_state.hd1_error_state,
         :hd2_error_state => current_health_state.hd2_error_state,
@@ -124,18 +128,18 @@ module ServerHealth
         :hd2_Offline_Uncorrectable => current_health_state.hd2_Offline_Uncorrectable,
         :hd1_Reallocated_Event_Count => current_health_state.hd1_Reallocated_Event_Count,
         :hd2_Reallocated_Event_Count => current_health_state.hd2_Reallocated_Event_Count,
-        :storage_pie_path => File.join(@options.reports_dir, storage_pie_file)
+        :storage_pie_path => storage_pie_file
       }
       report = ServerHealth::Report.new(template_file, values_reported)
       report_file = Time.now.strftime("%Y-%m-%d-report.html")
-      report.generate(File.join(@options.reports_dir,report_file))
+      report.generate(File.join(@options.report_dir,report_file))
       
       return report_file
     end
     def generate_email(storage_pie_file, report_file)
-      images = [File.join(@options.reports_dir,storage_pie_file)]
+      images = [File.join(@options.report_dir,storage_pie_file)]
       email = ServerHealth::EMail.new(images)
-      email.import_html(File.join(@options.reports_dir,report_file))
+      email.import_html(File.join(@options.report_dir,report_file))
       elm_file = Time.now.strftime("%Y-%m-%d-report.elm")
       email.create_elm(File.join(@options.email_dir,elm_file))
       
@@ -148,7 +152,8 @@ module ServerHealth
       subject = "Server Health Report vom #{Time.now.strftime("%d. %m. %Y")}"
       email_envelop = "From: #{credentials[:email_from]}\nTo: #{credentials[:email_to]}\nSubject: #{subject}\n"
       email_sender.mail_text = email_envelop + email_sender.mail_text
-      email_sender.send_report(credentials[:email_from], [credentials[:email_to]])
+      email_sender.send_report(credentials[:email_from], credentials[:email_to].split(","))
+      return credentials[:email_to]
     end
   end
 end

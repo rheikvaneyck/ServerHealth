@@ -29,7 +29,6 @@ module ServerHealth
         lc.axis :y, :labels => @data_labels, :color => 'cccccc', :font_size => 16, :alignment => :center
         @url = lc.to_url
       end
-      puts @url
       return @url
     end
   end
@@ -54,7 +53,6 @@ module ServerHealth
       GoogleChart::PieChart.new(@size, @title) do |pc|
         pc.data @used_title, @used_value, @used_color
         pc.data "Free", @free_value, @free_color
-        puts pc.to_url
         @url = pc.to_url
       end
       return @url
