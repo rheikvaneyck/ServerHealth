@@ -46,7 +46,7 @@ module ServerHealth
     end
 	
     private      
-    def get_file_from_local_dir
+    def get_files_from_local_dir
       file_list = []
       Dir.chdir(@options.local_log_dir) do
         file_list = Dir.glob("*.log")
