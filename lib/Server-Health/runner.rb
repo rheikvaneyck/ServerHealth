@@ -21,15 +21,13 @@ module ServerHealth
     
     def run
       # Download Log Files
-      # file_list = download_log_files
-      # initial load if log files already downloaded
-      file_list = []
-      Dir.chdir(@options.local_log_dir) do
-        file_list = Dir.glob("*.log")
-      end
+      file_list = download_log_files
+      puts file_list.length
+      # or: initial load if log files already downloaded
+      # file_list = get_files_from_local_dir
       
       # Insert the log files and timestamps into the DB
-      import_log_files file_list
+      # import_log_files file_list
       
       # Visualize Data
       # 1. Storage Pie
@@ -47,7 +45,15 @@ module ServerHealth
       puts "Finished."
     end
 	
-    private
+    private      
+    def get_file_from_local_dir
+      file_list = []
+      Dir.chdir(@options.local_log_dir) do
+        file_list = Dir.glob("*.log")
+      end
+      return file_list
+    end  
+ 
     def download_log_files
       exclude_list = @db.get_column(ServerHealth::DBManager::LogFile, :file_name) # get in here the files that are allready in the database
       
