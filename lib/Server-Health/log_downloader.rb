@@ -81,11 +81,9 @@ module ServerHealth
     
     def import_file_list(file_list, long_file_list)
       long_file_list.each_line do |line|
-          a = line.split
-          # puts %{file_date: #{a[5]} #{a[6]}, file_name: #{a[7]} }
-          next if a.length < 8
-          # [ filename, "file_date file_time"]
-          file_list << a[7]
+          if /([\w-]+\.log)/ =~ line then
+            file_list << $1
+          end
       end
       return file_list.length
     end

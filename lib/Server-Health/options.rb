@@ -3,6 +3,7 @@ require 'optparse'
 
 module ServerHealth
   class Options
+    BASE_DIR = "server"
     DATABASE_DIR = "db"
     DATABASE_FILE = "logs-dev.sqlite"   
     CONFIG_DIR = "config"
@@ -10,9 +11,11 @@ module ServerHealth
     REMOTE_LOG_DIR = "/var/log/health"
     LOCAL_LOG_DIR = "downloads"
     REPORT_DIR = "reports"
+    TEMPLATE_DIR = "reports"
     REPORT_TEMPLATE = "report_template.html.erb"
     EMAIL_DIR = "mails"
     
+    attr_reader :base_dir
     attr_reader :database_dir
     attr_reader :database_file
     attr_reader :config_dir
@@ -20,10 +23,12 @@ module ServerHealth
     attr_reader :remote_log_dir
     attr_reader :local_log_dir
     attr_reader :report_dir
+    attr_reader :template_dir
     attr_reader :report_template
     attr_reader :email_dir
     
     def initialize(argv)
+      @base_dir = BASE_DIR
       @database_dir = DATABASE_DIR
       @database_file = DATABASE_FILE
       @config_dir = CONFIG_DIR
@@ -31,6 +36,7 @@ module ServerHealth
       @remote_log_dir = REMOTE_LOG_DIR
       @local_log_dir = LOCAL_LOG_DIR
       @report_dir = REPORT_DIR
+      @template_dir = TEMPLATE_DIR
       @report_template = REPORT_TEMPLATE
       @email_dir = EMAIL_DIR
       
@@ -40,6 +46,9 @@ module ServerHealth
     def parse(argv)
       OptionParser.new do |opts|
         opts.banner = "Usage: server_health [ options ]"
+        opts.on("-b", "--base-dir path", String, "Path to directory") do |b|
+          @base_dir = b
+        end
         opts.on("-d", "--db-dir path", String, "Path to directory") do |db|
           @database_dir = db
         end
@@ -58,8 +67,11 @@ module ServerHealth
         opts.on("-l", "--local-log-dir path", String, "Path to directory") do |l|
           @local_log_dir = l
         end
-        opts.on("-p", "--reports-dir path", String, "Path to directory") do |p|
+        opts.on("-p", "--report-dir path", String, "Path to directory") do |p|
           @report_dir = p
+        end
+        opts.on("-d", "--template-dir path", String, "Path to directory") do |d|
+          @template_dir = d
         end
         opts.on("-t", "--report-template file", String, "Path to directory") do |t|
           @report_template = t

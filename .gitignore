@@ -6,3 +6,4 @@ db/*.sqlite
 .project
 *.komodoproject
 config/credentials.yml
+config/credentials-hda.yml

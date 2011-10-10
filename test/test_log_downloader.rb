@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/../lib/Server-Health/log_downloader'
 class TestLogDownloader < Test::Unit::TestCase
   context "import log dir listing" do
     setup do
-      @log_downloader = ServerHealth::LogDownloader.new("localhost", "rubyuser", "#Volvic#")
+      @log_downloader = ServerHealth::LogDownloader.new("192.168.100.70", "root", "#Volvic#")
     end
     should "return nr of differences" do
       assert_equal 1, @log_downloader.kick_existing_items([1,2,3],[1,2])
@@ -19,7 +19,7 @@ class TestLogDownloader < Test::Unit::TestCase
       assert_not_equal 0, file_list.length
     end
     should "return number of downloaded logs" do
-      assert_not_equal 0, @log_downloader.download_new_logs("/var/log/health", "../downloads")
+      assert_not_equal 0, @log_downloader.download_new_logs("/var/log/health", "../downloads").length
     end
   end
 end

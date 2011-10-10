@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'fileutils'
 require_relative '../helper_class'
 require_relative 'options'
 require_relative 'credentials'
@@ -17,7 +18,9 @@ module ServerHealth
     
     def initialize(argv)
       @options = ServerHealth::Options.new(argv)
-      @db = ServerHealth::DBManager.new(File.join(@options.database_dir, @options.database_file))
+      create_directories
+      provide_templates
+      @db = ServerHealth::DBManager.new(File.join(@options.base_dir,@options.database_dir, @options.database_file))
     end
     
     def run
@@ -27,7 +30,6 @@ module ServerHealth
       # or: initial load if log files already downloaded
       # file_list = get_files_from_local_dir
       # puts file_list.length if $DEBUG
-      
       # Insert the log files and timestamps into the DB
       import_log_files file_list unless file_list.length == 0
       
@@ -43,16 +45,41 @@ module ServerHealth
       # Generate E-Mail
       elm_file = generate_email storage_pie_file, report_file
       puts "E-Mail-Datei zum Statusbericht: #{elm_file}"
-    
       # Send Report
       recipients = send_report elm_file
       puts "E-Mail mit Statusbericht an #{recipients} versandt."
     end
 	
-    private      
+    private
+    def create_directories
+      @options.instance_variables.each do |v|
+        if  v =~ /^.(?!base|remote).*_dir$/ then
+          # puts File.join(@options.base_dir, @options.instance_variable_get(v))
+          dir = File.join(@options.base_dir, @options.instance_variable_get(v))
+          FileUtils.mkdir_p(dir)
+        end
+      end
+    end
+    def provide_templates
+      # report template
+      template_src = File.join("template","report_template.html.erb")
+      template_dest = File.join(@options.base_dir, @options.report_dir,"report_template.html.erb")
+      FileUtils.cp(template_src,template_dest) unless File.exists?(template_dest)
+      # credential template
+      template_src = File.join("config","credentials_sample.yml")
+      template_dest = File.join(@options.base_dir, @options.config_dir,"credentials_sample.yml")
+      unless File.exists?(template_dest)
+        begin 
+          FileUtils.cp(template_src,template_dest)
+        ensure
+          puts "Edit the credential file #{template_dest}, programm ends here for now"
+          exit
+        end
+      end     
+    end
     def get_files_from_local_dir
       file_list = []
-      Dir.chdir(@options.local_log_dir) do
+      Dir.chdir(@options.base_dir,@options.local_log_dir) do
         file_list = Dir.glob("*.log")
       end
       return file_list
@@ -62,10 +89,10 @@ module ServerHealth
       exclude_list = @db.get_column(ServerHealth::DBManager::LogFile, :file_name) # get in here the files that are allready in the database
       
       credential_keys = ["ssh_user", "ssh_pw", "ssh_server"]
-      credentials = ServerHealth::Credentials.read_from_yaml(File.join(@options.config_dir,@options.credential_file), credential_keys)
+      credentials = ServerHealth::Credentials.read_from_yaml(File.join(@options.base_dir,@options.config_dir,@options.credential_file), credential_keys)
       
       log_downloader = ServerHealth::LogDownloader.new(credentials[:ssh_server],credentials[:ssh_user],credentials[:ssh_pw])
-      return log_downloader.download_new_logs(@options.remote_log_dir, @options.local_log_dir, exclude_list)
+      return log_downloader.download_new_logs(@options.remote_log_dir, File.join(@options.base_dir,@options.local_log_dir), exclude_list)
     end
     def import_log_files(file_list)
       health_data = ServerHealth::HealthData.new()
@@ -74,7 +101,7 @@ module ServerHealth
         timestamp = ""
         begin
           timestamp = Helper::HelperClass.timestamp_from_filename(file).to_s
-          health_data.parse_health_file(File.join(@options.local_log_dir, file))
+          health_data.parse_health_file(File.join(@options.base_dir,@options.local_log_dir, file))
           log_file = @db.insert_record(ServerHealth::DBManager::LogFile, {:file_name => file, :file_date => timestamp})
           puts "Log file #{file} imported" if $DEBUG
         rescue
@@ -111,12 +138,12 @@ module ServerHealth
       hd_space_left = current_health_state.hd_space_left
       c = ServerHealth::StoragePie.new(hd_space_used,hd_space_left)
       storage_pie_url = c.get_url
-      cd = ServerHealth::ChartDownloader.new(@options.report_dir,"storage-")
+      cd = ServerHealth::ChartDownloader.new(File.join(@options.base_dir,@options.report_dir),"storage-")
       return cd.download_chart(storage_pie_url)
     end
     def generate_report(storage_pie_file)
       current_health_state = ServerHealth::DBManager::HealthState.find(:last)
-      template_file = File.join(@options.report_dir, @options.report_template)
+      template_file = File.join(@options.base_dir,@options.template_dir, @options.report_template)
       values_reported = { 
         :hd1_error_state => current_health_state.hd1_error_state,
         :hd2_error_state => current_health_state.hd2_error_state,
@@ -132,23 +159,23 @@ module ServerHealth
       }
       report = ServerHealth::Report.new(template_file, values_reported)
       report_file = Time.now.strftime("%Y-%m-%d-report.html")
-      report.generate(File.join(@options.report_dir,report_file))
+      report.generate(File.join(@options.base_dir,@options.report_dir,report_file))
       
       return report_file
     end
     def generate_email(storage_pie_file, report_file)
-      images = [File.join(@options.report_dir,storage_pie_file)]
+      images = [File.join(@options.base_dir,@options.report_dir,storage_pie_file)]
       email = ServerHealth::EMail.new(images)
-      email.import_html(File.join(@options.report_dir,report_file))
+      email.import_html(File.join(@options.base_dir,@options.report_dir,report_file))
       elm_file = Time.now.strftime("%Y-%m-%d-report.elm")
-      email.create_elm(File.join(@options.email_dir,elm_file))
+      email.create_elm(File.join(@options.base_dir,@options.email_dir,elm_file))
       
       return elm_file
     end
     def send_report(elm_file)
       credential_keys = ["smtp_user", "smtp_pw", "smtp_server", "smtp_port", "smtp_host", "email_from", "email_to"]
-      credentials = ServerHealth::Credentials.read_from_yaml(File.join(@options.config_dir,@options.credential_file),credential_keys)
-      email_sender = ServerHealth::MailSender.new(File.join(@options.email_dir,elm_file), credentials)
+      credentials = ServerHealth::Credentials.read_from_yaml(File.join(@options.base_dir,@options.config_dir,@options.credential_file),credential_keys)
+      email_sender = ServerHealth::MailSender.new(File.join(@options.base_dir,@options.email_dir,elm_file), credentials)
       subject = "Server Health Report vom #{Time.now.strftime("%d. %m. %Y")}"
       email_envelop = "From: #{credentials[:email_from]}\nTo: #{credentials[:email_to]}\nSubject: #{subject}\n"
       email_sender.mail_text = email_envelop + email_sender.mail_text

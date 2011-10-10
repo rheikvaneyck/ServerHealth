@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+	<title>Server Health Report</title>
+	    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=UTF-8">
+	    <META NAME="GENERATOR" CONTENT="GtkHTML/3.32.2">
+	</head>
+	<body style="font-family: sans-serif;">
+		<h1 style="color: #555;font-weight: bold;font-size: larger;border-bottom: solid 1px #555;"><%="Server Festplattenzustand - #{Time.now.strftime("%d.%m.%Y")}"%></h1>
+		<DIV style="clear: both;margin-left: 50px;">
+		<h2 style="margin: 20px 0px 0px 20px;font-size: medium;color: #555;">---- Funktionstest</h2>
+		    <DIV ID="hd1_error_state" style="width: 200px;height: 100px;border: solid 2px #bbb;float: left;margin: 10px;">
+		      <H3 style="font-size: small;background-color: #bbb;margin: 0px;padding: 5px 0px 5px 0px;text-align: center;">HDD 1 Fehlerstatus</H3>
+		      <P style="font-size: medium;text-align: center;"><%="#{@hd1_error_state}"%></P>
+		    </DIV>
+		    <DIV ID="hd2_error_state" style="width: 200px;height: 100px;border: solid 2px #bbb;float: left;margin: 10px;">
+		      <h3 style="font-size: small;background-color: #bbb;margin: 0px;padding: 5px 0px 5px 0px;text-align: center;">HDD 2 Fehlerstatus</H3>
+		      <P  style="font-size: medium;text-align: center;"><%="#{@hd2_error_state}"%></P>
+		    </DIV>
+		</DIV>
+		<div style="clear: both;margin: 30px 0px 0px 60px;">
+		<h2 style="margin: 20px 0px 0px 20px;font-size: medium;color: #555;">---- SMARTT Werte</h2>
+		    <TABLE style="border: 2px solid #bbb; width: 428px;font-size:small;">
+			<THEAD>
+			    <tr style="background-color: #bbb;">
+				<th colspan=3 style="padding: 5px;">Festplatten-Fehlerwerte</th>
+			    </tr>
+			</THEAD>
+			<tbody>
+			    <tr>
+				<td style="padding: 5px 0px 5px 10px; border-bottom: 2px solid lightgrey;">SMARTT</td>
+				<td style="text-align: center;border-bottom: 2px solid lightgrey;">HDD 1</td>
+				<td style="text-align: center;border-bottom: 2px solid lightgrey;">HDD 2</td>
+			    </tr>
+			    <tr>
+				<td style="border-bottom: 1px dashed lightgrey;">Lesefehler</td>
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd1_Raw_Read_Error_Rate}"%></td>
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd2_Raw_Read_Error_Rate}"%></td><!-- Raw_Read_Error_Rate -->
+			    </tr>
+			    <tr>
+				<td style="border-bottom: 1px dashed lightgrey;">Neuzugewiesene Sectoren</td>
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd1_Reallocated_Sector_Ct}"%></td>
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd2_Reallocated_Sector_Ct}"%></td><!-- Reallocated_Sector_Ct -->
+			    </tr>
+			    <tr>
+				<td style="border-bottom: 1px dashed lightgrey;">Nicht wiederherstellbar</td>
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd1_Offline_Uncorrectable}"%></td>
+				<td style="text-align: center;border-bottom: 1px dashed lightgrey;"><%= "#{@hd2_Offline_Uncorrectable}"%></td><!-- Offline_Uncorrectable -->
+			    </tr>
+			    <tr>
+				<td>Neuzuweisungen</td>
+				<td style="text-align: center;"><%= "#{@hd1_Reallocated_Event_Count}"%></td>
+				<td style="text-align: center;"><%= "#{@hd2_Reallocated_Event_Count}"%></td><!-- Reallocated_Event_Count -->
+			    </tr>
+			</tbody>
+		    </TABLE>
+		</div>
+		<DIV style="clear: both;margin-left: 50px;padding-top: 1px;">
+		<h2 style="margin: 20px 0px 0px 20px;font-size: medium;color: #555;">---- Festplattennutzung</h2>
+		    <IMG SRC="<%= @storage_pie_path %>" ALIGN="bottom" BORDER="0" ALT="Storage Pie" style="border: solid 2px #bbb;width 250px;height: 250px;margin: 10px;">
+		</DIV>
+	</BODY>
+</HTML>
