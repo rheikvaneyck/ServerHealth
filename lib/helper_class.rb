@@ -7,6 +7,16 @@ module Helper
         return nil
       end
     end
+    def self.reduce_array(array, to_length)
+      return array if array.length < to_length
+      reduced_array = []
+      l = (array.length / to_length)
+      to_length.times do |t|
+        index = ((t)*l).to_i
+        reduced_array << array.reverse[index]
+      end
+      return reduced_array.reverse
+    end
   end
 end
 

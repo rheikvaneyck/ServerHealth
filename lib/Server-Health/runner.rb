@@ -7,6 +7,7 @@ require_relative 'log_downloader'
 require_relative 'health_file_parser'
 # require_relative 'db_connector' is obsolete!!!
 require_relative 'db_manager'
+require_relative 'normed_array'
 require_relative 'health_charts'
 require_relative 'chart_downloader'
 require_relative 'generate_report'
@@ -26,7 +27,7 @@ module ServerHealth
     def run
       # Download Log Files
       file_list = download_log_files
-      puts "Anzahl neuer Log-Dateien: #{file_list.length}"
+      #puts "Anzahl neuer Log-Dateien: #{file_list.length}"
       # or: initial load if log files already downloaded
       # file_list = get_files_from_local_dir
       # puts file_list.length if $DEBUG
@@ -37,7 +38,9 @@ module ServerHealth
       # 1. Storage Pie
       storage_pie_file = create_storage_chart
       puts "Diagramm zum Speicherverbrauch: #{storage_pie_file}"
-      
+      # 2. Storage over time Diagram
+      storage_time_file = create_storage_over_time_chart
+      puts "Diagramm zum zeitlichen Speicherverbrauch: #{storage_time_file}"
       # Generate Report
       report_file = generate_report(storage_pie_file)
       puts "Statusbericht: #{report_file}"
@@ -109,7 +112,7 @@ module ServerHealth
         end
         begin
           @db.insert_record(ServerHealth::DBManager::HealthState, {
-            :file_id => log_file.id,
+            :log_file_id => log_file.id,
             :raid_state => health_data.raid_state,
             :hd1_error_state => health_data.hd1_error_state,
             :hd2_error_state => health_data.hd2_error_state,
@@ -141,10 +144,41 @@ module ServerHealth
       cd = ServerHealth::ChartDownloader.new(File.join(@options.base_dir,@options.report_dir),"storage-")
       return cd.download_chart(storage_pie_url)
     end
+    def create_storage_over_time_chart
+      hd_space_used = []
+      monitor_time = []
+      log_files = ServerHealth::DBManager::LogFile.select("id,file_date")
+      log_files.each do |l|
+        monitor_time << l.file_date
+        hd_space_used << (l.health_state.hd_space_used / 1024)
+      end
+      
+      monitor_time = Helper::HelperClass.reduce_array(monitor_time,50)
+      hd_space_used = Helper::HelperClass.reduce_array(hd_space_used,50)
+      x = ServerHealth::NormedDateArray.new(monitor_time).get_normed_dates
+      # FIXME x-data is broken
+      x = (1..100).step(2).to_a
+      y = ServerHealth::NormedArray.new(hd_space_used).get_normed_data
+      
+      y_from_value = 0
+      y_to_value =  ((hd_space_used.max.to_i)/1000 + 1) * 1000
+      y_label_step = (y_to_value - y_from_value)/10.0
+      y_labels = (y_from_value..y_to_value).step(y_label_step).to_a
+      y_labels = y_labels.collect {|i| i.to_i }
+
+      x_labels = Helper::HelperClass.reduce_array(monitor_time,10)
+      chart = ServerHealth::StorageHistoryChart.new([x,y], y_labels, x_labels)
+      storage_time_url = chart.get_url
+      puts storage_time_url
+      cd = ServerHealth::ChartDownloader.new(File.join(@options.base_dir,@options.report_dir),"storage_time-")
+      return cd.download_chart(storage_time_url)
+    end
     def generate_report(storage_pie_file)
       current_health_state = ServerHealth::DBManager::HealthState.find(:last)
+      server = get_server_name
       template_file = File.join(@options.base_dir,@options.template_dir, @options.report_template)
-      values_reported = { 
+      values_reported = {
+        :server_name => server,
         :hd1_error_state => current_health_state.hd1_error_state,
         :hd2_error_state => current_health_state.hd2_error_state,
         :hd1_Raw_Read_Error_Rate => current_health_state.hd1_Raw_Read_Error_Rate,
@@ -181,6 +215,12 @@ module ServerHealth
       email_sender.mail_text = email_envelop + email_sender.mail_text
       email_sender.send_report(credentials[:email_from], credentials[:email_to].split(","))
       return credentials[:email_to]
+    end
+    def get_server_name
+      credential_keys = ["ssh_server"]
+      config_file_path = File.join(@options.base_dir,@options.config_dir,@options.credential_file)
+      credentials = ServerHealth::Credentials.read_from_yaml(config_file_path,credential_keys)
+      return credentials[:ssh_server]
     end
   end
 end

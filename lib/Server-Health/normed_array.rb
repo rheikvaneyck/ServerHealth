@@ -51,8 +51,8 @@ module ServerHealth
     end
     def get_normed_dates
       unless @dates.empty?
-        first = Date.parse(@dates.first)
-        @dates.collect!{|d| (Date.parse(d) - first).to_i}
+        first_date = Date.parse(@dates.first.to_s)
+        @dates.collect!{|d| (Date.parse(d.to_s) - first_date).to_i}
         @normed_dates = NormedArray.new(@dates)
         return @normed_dates.get_normed_data
       end

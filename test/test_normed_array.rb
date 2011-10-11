@@ -29,7 +29,7 @@ class TestNormedArray < Test::Unit::TestCase
   end
   context "norm an date array" do
     setup do
-      @a = ServerHealth::NormedDateArray.new(["2011-06-01 06:47","2011-06-02 06:48","2011-06-03 06:50"])     
+      @a = ServerHealth::NormedDateArray.new(["2011-06-01","2011-06-02 06:48","2011-06-03 06:50"])     
     end
     should "return min and max values" do
       dates = @a.get_normed_dates

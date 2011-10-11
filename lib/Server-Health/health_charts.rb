@@ -83,7 +83,6 @@ module ServerHealth
         lcxy.axis :x, :labels => @time_labels, :color => 'cccccc', :font_size => 16, :alignment => :center
         @url = lcxy.to_url
       end
-      puts @url
       return @url
     end
   end

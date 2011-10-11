@@ -20,7 +20,7 @@ module ServerHealth
       create_tables
     end
     class LogFile < ActiveRecord::Base
-        has_one :health_state
+      has_one :health_state
     end
     class HealthState < ActiveRecord::Base
       belongs_to :log_file
@@ -55,7 +55,7 @@ module ServerHealth
       unless ActiveRecord::Base.connection.table_exists?("health_states")
         ActiveRecord::Schema.define do
           create_table :health_states do |table|
-            table.column :file_id, :integer
+            table.column :log_file_id, :integer
             table.column :raid_state, :string
             table.column :hd1_error_state, :string
             table.column :hd2_error_state, :string

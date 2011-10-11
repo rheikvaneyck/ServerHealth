@@ -41,6 +41,7 @@ module ServerHealth
       @email_dir = EMAIL_DIR
       
       parse(argv)
+      puts argv
     end
     private
     def parse(argv)
