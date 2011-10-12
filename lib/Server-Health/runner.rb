@@ -8,8 +8,7 @@ require_relative 'health_file_parser'
 # require_relative 'db_connector' is obsolete!!!
 require_relative 'db_manager'
 require_relative 'normed_array'
-require_relative 'health_charts'
-require_relative 'chart_downloader'
+require_relative 'generate_charts'
 require_relative 'generate_report'
 require_relative 'generate_email'
 require_relative 'send_report'
@@ -39,8 +38,8 @@ module ServerHealth
       storage_pie_file = create_storage_chart
       puts "Diagramm zum Speicherverbrauch: #{storage_pie_file}"
       # 2. Storage over time Diagram
-      storage_time_file = create_storage_over_time_chart
-      puts "Diagramm zum zeitlichen Speicherverbrauch: #{storage_time_file}"
+      # storage_time_file = create_storage_over_time_chart
+      # puts "Diagramm zum zeitlichen Speicherverbrauch: #{storage_time_file}"
       # Generate Report
       report_file = generate_report(storage_pie_file)
       puts "Statusbericht: #{report_file}"
@@ -140,38 +139,38 @@ module ServerHealth
       hd_space_used = current_health_state.hd_space_used
       hd_space_left = current_health_state.hd_space_left
       c = ServerHealth::StoragePie.new(hd_space_used,hd_space_left)
-      storage_pie_url = c.get_url
-      cd = ServerHealth::ChartDownloader.new(File.join(@options.base_dir,@options.report_dir),"storage-")
-      return cd.download_chart(storage_pie_url)
+      chart_file_name = Time.now.strftime("storage-%Y-%m-%d-%H-%M.png")
+      c.save_chart_to_file(File.join(@options.base_dir,@options.report_dir, chart_file_name))
+      return chart_file_name
     end
     def create_storage_over_time_chart
-      hd_space_used = []
-      monitor_time = []
-      log_files = ServerHealth::DBManager::LogFile.select("id,file_date")
-      log_files.each do |l|
-        monitor_time << l.file_date
-        hd_space_used << (l.health_state.hd_space_used / 1024)
-      end
-      
-      monitor_time = Helper::HelperClass.reduce_array(monitor_time,50)
-      hd_space_used = Helper::HelperClass.reduce_array(hd_space_used,50)
-      x = ServerHealth::NormedDateArray.new(monitor_time).get_normed_dates
-      # FIXME x-data is broken
-      x = (1..100).step(2).to_a
-      y = ServerHealth::NormedArray.new(hd_space_used).get_normed_data
-      
-      y_from_value = 0
-      y_to_value =  ((hd_space_used.max.to_i)/1000 + 1) * 1000
-      y_label_step = (y_to_value - y_from_value)/10.0
-      y_labels = (y_from_value..y_to_value).step(y_label_step).to_a
-      y_labels = y_labels.collect {|i| i.to_i }
-
-      x_labels = Helper::HelperClass.reduce_array(monitor_time,10)
-      chart = ServerHealth::StorageHistoryChart.new([x,y], y_labels, x_labels)
-      storage_time_url = chart.get_url
-      puts storage_time_url
-      cd = ServerHealth::ChartDownloader.new(File.join(@options.base_dir,@options.report_dir),"storage_time-")
-      return cd.download_chart(storage_time_url)
+      #hd_space_used = []
+      #monitor_time = []
+      #log_files = ServerHealth::DBManager::LogFile.select("id,file_date")
+      #log_files.each do |l|
+      #  monitor_time << l.file_date
+      #  hd_space_used << (l.health_state.hd_space_used / 1024)
+      #end
+      #
+      #monitor_time = Helper::HelperClass.reduce_array(monitor_time,50)
+      #hd_space_used = Helper::HelperClass.reduce_array(hd_space_used,50)
+      #x = ServerHealth::NormedDateArray.new(monitor_time).get_normed_dates
+      ## FIXME x-data is broken
+      #x = (1..100).step(2).to_a
+      #y = ServerHealth::NormedArray.new(hd_space_used).get_normed_data
+      #
+      #y_from_value = 0
+      #y_to_value =  ((hd_space_used.max.to_i)/1000 + 1) * 1000
+      #y_label_step = (y_to_value - y_from_value)/10.0
+      #y_labels = (y_from_value..y_to_value).step(y_label_step).to_a
+      #y_labels = y_labels.collect {|i| i.to_i }
+      #
+      #x_labels = Helper::HelperClass.reduce_array(monitor_time,10)
+      #chart = ServerHealth::StorageHistoryChart.new([x,y], y_labels, x_labels)
+      #storage_time_url = chart.get_url
+      #puts storage_time_url
+      #cd = ServerHealth::ChartDownloader.new(File.join(@options.base_dir,@options.report_dir),"storage_time-")
+      #return cd.download_chart(storage_time_url)
     end
     def generate_report(storage_pie_file)
       current_health_state = ServerHealth::DBManager::HealthState.find(:last)
