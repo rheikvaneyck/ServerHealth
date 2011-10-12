@@ -5,7 +5,6 @@ require_relative 'options'
 require_relative 'credentials'
 require_relative 'log_downloader'
 require_relative 'health_file_parser'
-# require_relative 'db_connector' is obsolete!!!
 require_relative 'db_manager'
 require_relative 'normed_array'
 require_relative 'generate_charts'
