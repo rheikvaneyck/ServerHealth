@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require 'Server-Health/runner'
+require 'Server-Health'
 
 runner = ServerHealth::Runner.new(ARGV)
 runner.run

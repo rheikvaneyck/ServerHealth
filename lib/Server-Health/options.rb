@@ -11,7 +11,7 @@ module ServerHealth
     REMOTE_LOG_DIR = "/var/log/health"
     LOCAL_LOG_DIR = "downloads"
     REPORT_DIR = "reports"
-    TEMPLATE_DIR = "reports"
+    TEMPLATE_DIR = "template"
     REPORT_TEMPLATE = "report_template.html.erb"
     EMAIL_DIR = "mails"
     

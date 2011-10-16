@@ -87,9 +87,9 @@ EOF
     end
     
     def set_cid!(file_name, content_id)
-      regexp = "/([/]*[.\w\s])*#{file_name}/"
-      str = %{		    <IMG SRC="../downloads/chart-2011-07-01-20-49.png" ALIGN="bottom" BORDER="0" ALT="Storage Pie" style="border: solid 2px #bbb;width 250px;height: 250px;margin: 10px;"> }
-      str.sub!(/[\/.\-\w\s]*#{file_name}/, "cid:#{content_id}")
+      # regexp = "/([/]*[.\w\s])*#{file_name}/"
+      # str = %{		    <IMG SRC="../downloads/chart-2011-07-01-20-49.png" ALIGN="bottom" BORDER="0" ALT="Storage Pie" style="border: solid 2px #bbb;width: 250px;height: 250px;margin: 10px;"> }
+      # str.sub!(/[\/.\-\w\s]*#{file_name}/, "cid:#{content_id}")
       @html_report.sub!(/[\/.\-\w\s]*#{file_name}/, "cid:#{content_id}") unless @html_report.nil?
       return str
     end

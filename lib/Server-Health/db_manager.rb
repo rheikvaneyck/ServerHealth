@@ -56,21 +56,21 @@ module ServerHealth
         ActiveRecord::Schema.define do
           create_table :health_states do |table|
             table.column :log_file_id, :integer
-            table.column :raid_state, :string
-            table.column :hd1_error_state, :string
-            table.column :hd2_error_state, :string
-            table.column :hd1_Raw_Read_Error_Rate, :string
-            table.column :hd2_Raw_Read_Error_Rate, :string
-            table.column :hd1_Reallocated_Sector_Ct, :string
-            table.column :hd2_Reallocated_Sector_Ct, :string
-            table.column :hd1_Offline_Uncorrectable, :string
-            table.column :hd2_Offline_Uncorrectable, :string
-            table.column :hd1_Reallocated_Event_Count, :string
-            table.column :hd2_Reallocated_Event_Count, :string
-            table.column :hd1_run_time, :integer
-            table.column :hd2_run_time, :integer
-            table.column :hd_space_used, :integer
-            table.column :hd_space_left, :integer
+            table.column :raid_state, :string, :default => "-"
+            table.column :hd1_error_state, :string, :default => "-"
+            table.column :hd2_error_state, :string, :default => "-"
+            table.column :hd1_Raw_Read_Error_Rate, :string, :default => "-"
+            table.column :hd2_Raw_Read_Error_Rate, :string, :default => "-"
+            table.column :hd1_Reallocated_Sector_Ct, :string, :default => "-"
+            table.column :hd2_Reallocated_Sector_Ct, :string, :default => "-"
+            table.column :hd1_Offline_Uncorrectable, :string, :default => "-"
+            table.column :hd2_Offline_Uncorrectable, :string, :default => "-"
+            table.column :hd1_Reallocated_Event_Count, :string, :default => "-"
+            table.column :hd2_Reallocated_Event_Count, :string, :default => "-"
+            table.column :hd1_run_time, :integer, :default => "0"
+            table.column :hd2_run_time, :integer, :default => "0"
+            table.column :hd_space_used, :integer, :default => "0"
+            table.column :hd_space_left, :integer, :default => "0"
           end
         end
       end 

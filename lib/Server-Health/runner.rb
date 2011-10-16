@@ -1,16 +1,5 @@
 #!/usr/bin/env ruby
 require 'fileutils'
-require_relative '../helper_class'
-require_relative 'options'
-require_relative 'credentials'
-require_relative 'log_downloader'
-require_relative 'health_file_parser'
-require_relative 'db_manager'
-require_relative 'normed_array'
-require_relative 'generate_charts'
-require_relative 'generate_report'
-require_relative 'generate_email'
-require_relative 'send_report'
 
 module ServerHealth
   class Runner
@@ -63,12 +52,28 @@ module ServerHealth
     end
     def provide_templates
       # report template
-      template_src = File.join("template","report_template.html.erb")
-      template_dest = File.join(@options.base_dir, @options.report_dir,"report_template.html.erb")
+      gems_dir = system('gem env gemdir')
+      gem_template_dir = File.join(gems_dir,"gems","server-health","template",@options.report_template)
+      if File.exists?(File.join(@options.template_dir,@options.report_template))
+        template_src = File.join(@options.template_dir,@options.report_template)
+      elsif File.exists?(gem_template_dir)
+        template_src = File.join(gem_template_dir)
+      else
+        puts "Can not provide report template"
+        exit
+      end
+      template_dest = File.join(@options.base_dir, @options.report_dir,@options.report_template)
       FileUtils.cp(template_src,template_dest) unless File.exists?(template_dest)
       # credential template
-      template_src = File.join("config","credentials_sample.yml")
-      template_dest = File.join(@options.base_dir, @options.config_dir,"credentials_sample.yml")
+      gem_template_dir = File.join(gems_dir,"gems","server-health","config",@options.credential_file)
+      if File.exists?(File.join(@options.config_dir,@options.credential_file))
+        template_src = File.join(@options.config_dir,@options.credential_file)
+      elsif File.exists?(gem_template_dir)
+        template_src = File.join(gem_template_dir)
+      else
+        puts "Can not provide credential sample file"
+      end
+      template_dest = File.join(@options.base_dir, @options.config_dir,@options.credential_file)
       unless File.exists?(template_dest)
         begin 
           FileUtils.cp(template_src,template_dest)
@@ -96,8 +101,8 @@ module ServerHealth
       return log_downloader.download_new_logs(@options.remote_log_dir, File.join(@options.base_dir,@options.local_log_dir), exclude_list)
     end
     def import_log_files(file_list)
-      health_data = ServerHealth::HealthData.new()
       file_list.sort.each do |file|
+        health_data = ServerHealth::HealthData.new()
         log_file = nil
         timestamp = ""
         begin
@@ -137,7 +142,7 @@ module ServerHealth
       current_health_state = ServerHealth::DBManager::HealthState.find(:last)
       hd_space_used = current_health_state.hd_space_used
       hd_space_left = current_health_state.hd_space_left
-      c = ServerHealth::StoragePie.new(hd_space_used,hd_space_left)
+      c = ServerHealth::StoragePie3D.new(hd_space_used,hd_space_left)
       chart_file_name = Time.now.strftime("storage-%Y-%m-%d-%H-%M.png")
       c.save_chart_to_file(File.join(@options.base_dir,@options.report_dir, chart_file_name))
       return chart_file_name
@@ -173,10 +178,10 @@ module ServerHealth
     end
     def generate_report(storage_pie_file)
       current_health_state = ServerHealth::DBManager::HealthState.find(:last)
-      server = get_server_name
+      server_name = get_server_name
       template_file = File.join(@options.base_dir,@options.template_dir, @options.report_template)
       values_reported = {
-        :server_name => server,
+        :server_name => server_name,
         :hd1_error_state => current_health_state.hd1_error_state,
         :hd2_error_state => current_health_state.hd2_error_state,
         :hd1_Raw_Read_Error_Rate => current_health_state.hd1_Raw_Read_Error_Rate,

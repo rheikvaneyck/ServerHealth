@@ -32,12 +32,11 @@ tool right now.
 - net-scp
 - activerecord
 - shoulda
-- hoe
-- gchartrb
+- googlecharts
 
 == INSTALL:
 
-* FIX ME (sudo gem install, anything else)
+sudo gem install server-health
 
 == LICENSE:
 

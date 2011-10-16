@@ -1,9 +1,10 @@
-*.swp
+
 *~
-tmp/**/*
-downloads/*
-db/*.sqlite
-.project
-*.komodoproject
-config/credentials.yml
 config/credentials-hda.yml
+config/credentials.yml
+db/*.sqlite
+downloads/*
+*.komodoproject
+.project
+*.swp
+tmp/**/*

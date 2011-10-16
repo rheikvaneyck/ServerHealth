@@ -4,7 +4,7 @@ require 'erb'
 module ServerHealth
   class Report
     def initialize(template_file, values_reported)
-      @server = values_reported[:server_name]
+      @server_name = values_reported[:server_name]
       @hd1_error_state = values_reported[:hd1_error_state]
       @hd2_error_state = values_reported[:hd2_error_state]
       @hd1_Raw_Read_Error_Rate = values_reported[:hd1_Raw_Read_Error_Rate]
