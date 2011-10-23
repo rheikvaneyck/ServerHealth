@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
     s.description = "Server-Health - parsing and visualizing health data from remote servers"
     s.summary = s.description
     s.email = "rheikvaneyck@yahoo.de"
-    s.files = Dir["lib/**/*", "config/*", "template/*", "*.txt", "README*"]
+    s.files = Dir["lib/**/*", "config/*", "template/*", "test/*", "*.txt", "README*"]
     s.bindir = "bin"
     s.executables = "server_health"
     s.homepage = "http://myname.plus/MarcusNasarek"

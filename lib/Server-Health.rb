@@ -14,5 +14,5 @@ require 'Server-Health/send_report'
 require 'Server-Health/runner'
 
 module ServerHealth
-  VERSION = '0.0.1'
+  VERSION = '0.1.0'
 end

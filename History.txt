@@ -2,3 +2,11 @@
 
 * 1 major enhancement:
   * Initial release
+  
+=== 0.1.0 2011-10-17
+
+* 4 major enhancement:
+  * running release 
+  * configuration of application directories on cli
+  * multi-server ability
+  * using googlecharts, leaving gchartrb

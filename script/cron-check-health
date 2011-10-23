@@ -1,0 +1,7 @@
+#!/bin/sh
+PREFIX=/usr
+BINDIR=$PREFIX/sbin
+LOGDIR=/var/log/health
+LOGFILE=`date +"%Y-%m-%d"`-HealthStatus.log
+
+$BINDIR/check-health.sh > $LOGDIR/$LOGFILE

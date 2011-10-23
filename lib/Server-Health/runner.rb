@@ -1,9 +1,20 @@
 #!/usr/bin/env ruby
+# This module encaspulates functionality to run the server-health programm.
+# The main programm flow is in the run method
+#--
+# Copyright (c) 2011 Marcus Nasarek
+# Licensed under the same terms as Ruby. No warranty is provided.
+
 require 'fileutils'
 
 module ServerHealth
   class Runner
-    
+    # Initilialize the runner. Heaps of options are defined, parsed
+    # with the ServerHealth::Options class. During initialization
+    # the folder tree holding the data for the new server is created
+    # with create_directories. Templates for the credential file and
+    # the html report are copied to specific locations in the new folder
+    # tree. Furthermore a connection to the sqlite3 database is established.
     def initialize(argv)
       @options = ServerHealth::Options.new(argv)
       create_directories
@@ -12,30 +23,20 @@ module ServerHealth
     end
     
     def run
-      # Download Log Files
       file_list = download_log_files
-      #puts "Anzahl neuer Log-Dateien: #{file_list.length}"
-      # or: initial load if log files already downloaded
-      # file_list = get_files_from_local_dir
-      # puts file_list.length if $DEBUG
-      # Insert the log files and timestamps into the DB
       import_log_files file_list unless file_list.length == 0
       
-      # Visualize Data
-      # 1. Storage Pie
       storage_pie_file = create_storage_chart
       puts "Diagramm zum Speicherverbrauch: #{storage_pie_file}"
-      # 2. Storage over time Diagram
       # storage_time_file = create_storage_over_time_chart
       # puts "Diagramm zum zeitlichen Speicherverbrauch: #{storage_time_file}"
-      # Generate Report
+
       report_file = generate_report(storage_pie_file)
       puts "Statusbericht: #{report_file}"
       
-      # Generate E-Mail
       elm_file = generate_email storage_pie_file, report_file
       puts "E-Mail-Datei zum Statusbericht: #{elm_file}"
-      # Send Report
+
       recipients = send_report elm_file
       puts "E-Mail mit Statusbericht an #{recipients} versandt."
     end
@@ -44,7 +45,6 @@ module ServerHealth
     def create_directories
       @options.instance_variables.each do |v|
         if  v =~ /^.(?!base|remote).*_dir$/ then
-          # puts File.join(@options.base_dir, @options.instance_variable_get(v))
           dir = File.join(@options.base_dir, @options.instance_variable_get(v))
           FileUtils.mkdir_p(dir)
         end
