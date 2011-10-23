@@ -15,9 +15,9 @@ module ServerHealth
         if line =~ /RAID/
           puts "RAID:" if $DEBUG
         end
-        puts line.scan(/name\s+:\s\w+/) if $DEBUG
-        puts line.scan(/type\s+:\s\w+/) if $DEBUG
-        if line =~ /status\s+:\s\w+/
+        puts line.scan(/^name\s+:\s\w+/) if $DEBUG
+        puts line.scan(/^type\s+:\s\w+/) if $DEBUG
+        if line =~ /^status\s+:\s\w+/
           puts line if $DEBUG
           @raid_state = line.split(/\s+/)[2]
         end

@@ -1,0 +1,21 @@
+RAID:
+    raid_name: "^name\s+:\s+(\w+)"
+    raid_devs: "^devs\s+:\s+(\w+)"
+    raid_type: "^type\s+:\s+(\w+)"
+    raid_state: "^status\s+:\s(\w+)"    
+SMARTT:
+    device_model: "Device Model:\s+([\s\w-]+)" # string
+    serial_number: "Serial Number:\s+([\s\w-]+)" # string
+    raw_read_error_rate: "Raw_Read_Error_Rate\.\s+(\d+)" # counter
+    reallocated_sector_count: "Reallocated_Sector_Ct\.\s+(\d+)" # counter
+    offline_uncorectable: "Offline_Uncorrectable\.\s+(\d+)" # counter
+    reallocated_event_count: "Reallocated_Event_Count\.\s+(\d+)" # counter
+    error_state: "#\s+1\s+Short offline\s+(\d+)\s+" # string
+DISK:
+    disks:
+        - "/dev/sda"
+        - "/dev/sdb"
+    storage: "(\d+)\s+(\d+)\s+%\s+(\/)$" # used, free, mount-point
+    storage_used: "storage-0"
+    storage_free: "storage-1"
+    mount_point: "storage-2"    
